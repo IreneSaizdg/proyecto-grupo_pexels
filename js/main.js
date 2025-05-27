@@ -24,21 +24,23 @@ const fragment = document.createDocumentFragment();
 
 //EVENTOS ------------------------------------------------------------------------->
 
-searchButton.addEventListener("click", ev => {
-    console.log(wordFilter.value);
-
+searchButton.addEventListener("click", (ev) => {
+    filterByKeywords();
 })
 
 
 //FUNCIONES ----------------------------------------------------------------------->
-
-
-const filterByKeyword = async (keywords) => {
-    const splitedKeywords = keywords.split(" ");
-    const dataAPI = await getDataFromSearch("ocean", "landscape", null);
-
-
+/**
+ * Rellena la galería con la fotos obtenidas usando las keywords en el filtro.
+ */
+const filterByKeywords = async () => {
+    searchButton.disabled = true;
+    const filterVlue = wordFilter.value.trim();
+    const dataAPI = await getDataFromSearch(filterVlue, "landscape", null);
+    fillGallery(dataAPI);
+    searchButton.disabled = false;
 }
+
 
 /**
  * Obtener datos con el uso del endpoint Search.
