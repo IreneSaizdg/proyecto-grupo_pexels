@@ -43,51 +43,75 @@
 const cardContainer = document.querySelector("#cardsContainer");
 const fragment = document.createDocumentFragment();
 
+
 const orientationFilter = document.querySelector("#orientationFilter")
 
+//SearchInput ficticio
+const searchInput = {
+    value: "sea",
+}
 
 
 //EVENTOS ------------------------------------------------------------------------->
 
-// const categoryQuery = "sea"
-// const chosenOrientation = "square"
 
-orientationFilter.addEventListener("change", async (event) => {
-    console.log(event.target.value) //target es el elemento del selector seleccionado.
+//Evento al cambiar la opción del selector (filtro por orientación)
+orientationFilter.addEventListener("change", manageOrientationChange);
 
-    //PRIMERA PRUEBA FUNCIÓN
-    const linkPortraitFilter = await getDataFromSearch("sky", "portrait")
-    const linkLandscapeFilter = await getDataFromSearch("desert", "landscape")
-    const linkSquareFilter = await getDataFromSearch("forest", "square")
 
-    if (event.target.value === "portrait") {
-        fillGallery(linkPortraitFilter)
+//Función para gestionar el cambio de orientación en el selector
+async function manageOrientationChange(){
+        const query = searchInput.value || "no hay query"; //Variable a asignar externamente para el query
+        
+        const selectedOrientation = orientationFilter.value; //La orientación seleccionada será igual que la del selector seleccionado 
+        const orientationData = await filterByOrientation(query, selectedOrientation); //Llama a la función 
+        fillGallery(orientationData); //Llena la galería en base a la data de orientación. 
+
+        //console.log(event.target.value) //target es el elemento del selector seleccionado.
     }
 
-    if (event.target.value === "landscape") {
-        fillGallery(linkLandscapeFilter)
-    }
 
-    else if (event.target.value === "square") {
-        fillGallery(linkSquareFilter)
-    }
+//Función que hace la búsqueda por orientación 
+async function filterByOrientation(query, orientation) {
+    const orientationData = await getDataFromSearch(query, orientation); 
+    return orientationData
 
-})
+    //Trae los datos de la API que busca por orientación (orientación determinada por los valores de las opciones del selector después en el evento).
+}
 
-// async function filterByOrientation(event, query, orientation) {
 
-//     const linkFilter = await getDataFromSearch(query, orientation)
+    /*INTENTO 1 (dentro del evento):
+        // const linkPortraitFilter = await getDataFromSearch(query, "portrait")
+        // const linkLandscapeFilter = await getDataFromSearch(query, "landscape")
+        // const linkSquareFilter = await getDataFromSearch(query, "square")
 
-//     if (event.target.value === "square") {
-//         fillGallery(linkFilter)
-//     }
-//     else if (event.target.value === "portrait") {
-//         fillGallery(linkFilter)
-//     }
-//     else if (event.target.value === "landscape") {
-//         fillGallery(linkFilter)
-//     }
-// }
+        // if (event.target.value === "portrait") {
+        //     fillGallery(linkPortraitFilter)
+        // }
+
+        // if (event.target.value === "landscape") {
+        //     fillGallery(linkLandscapeFilter)
+        // }
+
+        // else if (event.target.value === "square") {
+        //     fillGallery(linkSquareFilter)
+        // }*/
+
+    /*INTENTO 2 (función externa):
+        // async function filterByOrientation(event, query, orientation) {
+
+        //     const linkFilter = await getDataFromSearch(query, orientation)
+
+        //     if (event.target.value === "square") {
+        //         fillGallery(linkFilter)
+        //     }
+        //     else if (event.target.value === "portrait") {
+        //         fillGallery(linkFilter)
+        //     }
+        //     else if (event.target.value === "landscape") {
+        //         fillGallery(linkFilter)
+        //     }
+        // }*/
 
 
 
@@ -159,10 +183,10 @@ const fillGallery = ({ photos }) => { //Desestructurado de (json.photos)
  * Inicializa la galeria obteniendo los datos desde la API con getDataFromSearch.
  */
 //PROVISIONAL
-// const init = async () => { //init -> Inicializa
-//     const dataAPI = await getDataFromSearch("ocean", "landscape", null); //Llama a la API pasándo por parámetro el query, la orientación y las keywords.
-//     fillGallery(dataAPI)//Llena la galería
-// }
+const init = async () => { //init -> Inicializa
+    const dataAPI = await getDataFromSearch(searchInput.value, "square", null); //Llama a la API pasándo por parámetro el query, la orientación y las keywords.
+    fillGallery(dataAPI)//Llena la galería
+}
 
-// init()
+init()
 
