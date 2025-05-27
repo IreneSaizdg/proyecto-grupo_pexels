@@ -1,23 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Practica grupal API Pexels</title>
-    
+
     <link rel="stylesheet" href="/css/main.css">
 </head>
+
 <body>
     <header>
         <!--Navbar categorías ---------->
         <ul id="categoryList">
-            <li id="category1"></li>
-            <li id="category2"></li>
-            <li id="category3"></li>
+            <li id="category1">Category 1</li>
+            <li id="category2">Category 2</li>
+            <li id="category3">Category 3</li>
         </ul>
-        
+
         <!--Flitros ---------->
+        <!--Flitros palabras -->
         <input type="text" id="wordFilter" name="wordFilter" />
+
+        <!--Flitros por orientación (vertical/horizontal) -->
         <select id="orientationFilter" name="orientationFilter">
             <option value="vertical">Vertical</option>
             <option value="horizontal" selected>Horizontal</option>
@@ -26,19 +31,36 @@
 
 
     <body>
-        <div>
-            <div>
-                <div>
+        <!--Container todo  ------------------------------------------------->
+        <main>
+            <!--Container imgs ------------>
+            <section id="cardsContainer">
 
-                </div>
-            </div>
-            
-            <!--Paginación --->
-            <div>
+                <!--Card (DINAMICO) -->
+                <!-- <article id="card">
+                    <div>
+                        <img src="#" alt="imgAlt"></img>
+                    </div>
+                    <h1>Titulo img</h1>
+                    <div>
+                        <input type="checkbox" id="favoriteImgs" name="favoriteImgs" />
+                    </div>
 
+                </article> -->
+
+            </section>
+
+            <!--Paginación (DINÁMICO) --->
+            <div id="pagination">
+                <button>←←</button>
+                <button>←</button>
+                <p>Número actual</p> <!--Dinámico (más números)--->
+                <button>→</button>
+                <button>→→</button>
             </div>
-        </div>
+        </main>
     </body>
     <script src="/js/main.js"></script>
 </body>
+
 </html>
