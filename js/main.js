@@ -15,6 +15,8 @@
 
 //Elementos del DOM
 const cardContainer = document.querySelector("#cardsContainer");
+const wordFilter = document.querySelector("#wordFilter");
+const searchButton = document.querySelector("#searchButton")
 const fragment = document.createDocumentFragment();
 
 
@@ -22,14 +24,28 @@ const fragment = document.createDocumentFragment();
 
 //EVENTOS ------------------------------------------------------------------------->
 
+searchButton.addEventListener("click", ev => {
+    console.log(wordFilter.value);
+
+})
+
 
 //FUNCIONES ----------------------------------------------------------------------->
+
+
+const filterByKeyword = async (keywords) => {
+    const splitedKeywords = keywords.split(" ");
+    const dataAPI = await getDataFromSearch("ocean", "landscape", null);
+
+
+}
+
 /**
  * Obtener datos con el uso del endpoint Search.
  * @param {string} query 
  * @param {string} orientation 
  * @param {Array} words 
- * @returns 
+ * @returns {Object}g
  */
 const getDataFromSearch = async (query, orientation, words) => {
     const myString = `https://api.pexels.com/v1/search?query=${query}&orientation=${orientation}`;
