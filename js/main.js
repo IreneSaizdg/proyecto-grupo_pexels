@@ -96,10 +96,8 @@ listCategory.addEventListener("click", async (ev) => {
 
 // Evento paginación
 paginacion.addEventListener("click", (ev) => {
-    console.log(ev.target);
     if (ev.target.id === "nextPage"){
         if (lastFetch.next_page){
-            console.log("Next page: ", lastFetch.next_page);
             nextPage(lastFetch);
         } else {
             ev.target.disabled;
@@ -107,7 +105,6 @@ paginacion.addEventListener("click", (ev) => {
     }
     if (ev.target.id === "beforePage"){
         if (lastFetch.prev_page){
-            console.log("prev page: ", lastFetch.prev_page);
             prevPage(lastFetch);
         }else {
             ev.target.disabled;
@@ -269,29 +266,29 @@ const nextPage = async (json) => {
 }
 
 const prevPage = async (json) => {
-    console.log("prev page: ", json);
+    //console.log("prev page: ", json);
     const fetch = await obtainDataFromAPI(json.prev_page);
     actualPagina.innerHTML = json.page-1;
     fillGallery(fetch);
 }
 
 const firstPage = async (json) => {
-    console.log("first page: ", json);
+    //console.log("first page: ", json);
     const url = `https://api.pexels.com/v1/search?query=${category}`
     const fetch = await getDataFromSearch(url);
     actualPagina.innerHTML = 1;
-    console.log("first: ", fetch);
+    //console.log("first: ", fetch);
     fillGallery(fetch);
 }
 
 const lastPage = async (json) => {
-    console.log("first page: ", json);
+    //console.log("first page: ", json);
     const total = json.total_results;
     const pagina = total / json.per_page;
     const url = `https://api.pexels.com/v1/search?query=${category}&page=${pagina}`;
     const fetch = await getDataFromSearch(url);
     actualPagina.innerHTML = pagina;
-    console.log("first: ", fetch);
+    //console.log("first: ", fetch);
     fillGallery(fetch);
 }
 
