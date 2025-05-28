@@ -73,8 +73,7 @@ const createCard = (photo) => {
 
     photoImg.src = photo.src.tiny;
     photoImg.alt = photo.alt
-
-    title.textContent = photo.title;
+    title.textContent = photo.alt;
 
     favCheckbox.type = "checkbox";
     favCheckbox.id = "favoriteImgs";
