@@ -24,7 +24,7 @@
 const cardContainer = document.querySelector("#cardsContainer");
 
 const wordFilter = document.querySelector("#wordFilter");
-//const searchButton = document.querySelector("#searchButton")
+const searchButton = document.querySelector("#searchButton")
 
 const listCategory = document.querySelector("#categoryList");
 
@@ -38,6 +38,7 @@ const orientationFilter = document.querySelector("#orientationFilter")
 
 // Ultima fetch realizada
 let lastFetch = "";
+let category = "";
 
 
 // array de Categorias
@@ -95,22 +96,29 @@ listCategory.addEventListener("click", async (ev) => {
 
 // Evento paginación
 paginacion.addEventListener("click", (ev) => {
-    console.log(ev.target.id);
+    console.log(ev.target);
     if (ev.target.id === "nextPage"){
         if (lastFetch.next_page){
             console.log("Next page: ", lastFetch.next_page);
             nextPage(lastFetch);
+        } else {
+            ev.target.disabled;
         }
     }
     if (ev.target.id === "beforePage"){
         if (lastFetch.prev_page){
             console.log("prev page: ", lastFetch.prev_page);
             prevPage(lastFetch);
+        }else {
+            ev.target.disabled;
         }
     }
-/*      if (ev.target.id === "firstPage"){
+    if (ev.target.id === "firstPage"){
         firstPage(lastFetch);
-    } */
+    }
+    if (ev.target.id === "lastPage"){
+        lastPage(lastFetch);
+    }
 })
 
 
@@ -225,6 +233,7 @@ const getImgCat = async (query, porPagina = 1) => {
 
     const myImg = `https://api.pexels.com/v1/search?query=${query}&per_page=${porPagina}`;
     let img = await getDataFromSearch(myImg);
+    category = query;
     return img;
 
 }
@@ -268,12 +277,24 @@ const prevPage = async (json) => {
 
 const firstPage = async (json) => {
     console.log("first page: ", json);
-    //const url = `https://api.pexels.com/v1/search?query=${}&orientation=${orientation}&page=${page}`
-    const fetch = await getDataFromSearch(json);
+    const url = `https://api.pexels.com/v1/search?query=${category}`
+    const fetch = await getDataFromSearch(url);
     actualPagina.innerHTML = 1;
     console.log("first: ", fetch);
     fillGallery(fetch);
 }
+
+const lastPage = async (json) => {
+    console.log("first page: ", json);
+    const total = json.total_results;
+    const pagina = total / json.per_page;
+    const url = `https://api.pexels.com/v1/search?query=${category}&page=${pagina}`;
+    const fetch = await getDataFromSearch(url);
+    actualPagina.innerHTML = pagina;
+    console.log("first: ", fetch);
+    fillGallery(fetch);
+}
+
 
 
 //INVOCACIONES -------------------------------------------------------------------->
