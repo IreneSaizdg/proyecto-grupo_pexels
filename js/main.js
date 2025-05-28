@@ -1,12 +1,14 @@
 // VARIABLES (elementos del DOM, objetos, arrays...) -> EVENTOS -> FUNCIONES -> INVOCACIONES(a funciones)
 
+// LLAMADAS A API -> Filtros en el fetch: Categorias, Palabras, orientación, Cantidad de imagenes, 
+// 2EndPoints: (búsqueda) https://api.pexels.com/v1/search    (imagen por id para favoritos) https://api.pexels.com/v1/photos/:id
+
+
 
 /*PSEUDOCODE:
-    
+
 */
 
-// LLAMADAS A API -> Filtros en el fetch: Categorias, Palabras, orientación, Cantidad de imagenes, 
-//2EndPoints: (búsqueda) https://api.pexels.com/v1/search    (imagen por id para favoritos) https://api.pexels.com/v1/photos/:id
 
 
 
@@ -18,9 +20,32 @@ const cardContainer = document.querySelector("#cardsContainer");
 const fragment = document.createDocumentFragment();
 
 
+const orientationFilter = document.querySelector("#orientationFilter")
+
+//SearchInput ficticio
+const searchInput = {
+    value: "sea",
+}
 
 
 //EVENTOS ------------------------------------------------------------------------->
+
+
+//Evento al cambiar la opción del selector (filtro por orientación)
+orientationFilter.addEventListener("change", manageOrientationChange);
+
+
+//Función para gestionar el cambio de orientación en el selector
+async function manageOrientationChange() {
+    const query = searchInput.value || "no hay query"; //Variable a asignar externamente para el query
+
+    const selectedOrientation = orientationFilter.value; //La orientación seleccionada será igual que la del selector seleccionado 
+    const orientationData = await getDataFromSearch(query, selectedOrientation); //Llama a la función 
+    fillGallery(orientationData); //Llena la galería en base a la data de orientación. 
+
+    //console.log(event.target.value) //target es el elemento del selector seleccionado.
+}
+
 
 
 //FUNCIONES ----------------------------------------------------------------------->
@@ -95,17 +120,19 @@ const createCard = (photo) => {
  * Pinta las cards en la galeria.
  * @param {Object} -> Array con todos los datos de los objetos photos
  */
-const fillGallery = ({ photos }) => { // Desestructurado de (json.photos)
+const fillGallery = ({ photos }) => { //Desestructurado de (json.photos)
     cardContainer.innerHTML = ""; //Vacía el contenedor previamente
     photos.forEach(element => {
-        //TODO: meter contenido de card.
         const card = createCard(element)
-        //createCard(element)
         fragment.append(card);
     });
     cardContainer.append(fragment)
 
 }
+
+
+
+
 
 
 //INVOCACIONES -------------------------------------------------------------------->
@@ -115,7 +142,7 @@ const fillGallery = ({ photos }) => { // Desestructurado de (json.photos)
  */
 //PROVISIONAL
 const init = async () => { //init -> Inicializa
-    const dataAPI = await getDataFromSearch("ocean", "landscape", null); //Llama a la API pasándo por parámetro el query, la orientación y las keywords.
+    const dataAPI = await getDataFromSearch(searchInput.value, orientationFilter.value, null); //Llama a la API pasándo por parámetro el query, la orientación y las keywords.
     fillGallery(dataAPI)//Llena la galería
 }
 
