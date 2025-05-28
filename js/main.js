@@ -31,7 +31,11 @@ const fragment = document.createDocumentFragment();
 let lastFetch = "";
 
 // array de Categorias
-const arrCategory = ["ocean", "flower", "nature"];
+const arrCategory = [
+    {category: "ocean", name:"Oceano"},
+    {category: "flower", name: "Flores"},
+    {category: "nature", name: "Naturaleza"}
+];
 
 
 //EVENTOS ------------------------------------------------------------------------->
@@ -100,9 +104,9 @@ const fillGallery = (json) => { // Desestructurado de (json.photos)
 
 const createCategory = () => {
     arrCategory.forEach(async(item, indez, array) => {
-        const objImg = await getImgCat(item);
-        const itm = item;
-        fillCategory([objImg, itm]);
+        const objImg = await getImgCat(item.category);
+        const title = item.name;
+        fillCategory([objImg, title]);
     })
 
 }
@@ -117,7 +121,7 @@ const getImgCat = async (query, porPagina = 1) => {
 }
 
 
-const fillCategory = ([objImg, itm]) => {
+const fillCategory = ([objImg, title]) => {
     //listCategory.innerHTML = "";
     console.log("Category", objImg);
     const article = document.createElement("ARTICLE");
@@ -128,7 +132,7 @@ const fillCategory = ([objImg, itm]) => {
     //console.log(ocean.photos[0].src.tiny);
     //console.log("imagen: ", imgOcean);
     img.setAttribute("src", objImg.photos[0].src.tiny);
-    titulo.innerHTML = itm.charAt(0).toUpperCase() + itm.slice(1);
+    titulo.innerHTML = title;
     
     divImg.append(img);
     article.append(divImg, titulo)
