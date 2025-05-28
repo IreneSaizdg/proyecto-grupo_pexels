@@ -65,23 +65,27 @@ const createCard = (photo) => {
     const cardArticle = document.createElement("ARTICLE");
     const imgDiv = document.createElement("DIV");
     const photoImg = document.createElement("IMG");
-    const title = document.createElement("H3");
+    const title = document.createElement("H4");
     const favDiv = document.createElement("DIV");
     const favCheckbox = document.createElement("INPUT");
+    const favP = document.createElement("P");
     //Asignas los valores de los elementos.
-    cardArticle.classList.add("card");
+    cardArticle.classList.add("cardArticle");
 
     photoImg.src = photo.src.tiny;
     photoImg.alt = photo.alt
     title.textContent = photo.alt;
 
     favCheckbox.type = "checkbox";
-    favCheckbox.id = "favoriteImgs";
-    favCheckbox.name = "favoriteImgs";
+    favCheckbox.id = "favImgs";
+    favCheckbox.name = "favImgs";
+    favCheckbox.classList.add("favCheckbox");
+    favDiv.classList.add("favDiv");
+    favP.textContent = "añadir a favoritos";
 
     //Appends
     imgDiv.append(photoImg);
-    favDiv.append(favCheckbox);
+    favDiv.append(favP, favCheckbox);
 
     cardArticle.append(imgDiv, title, favDiv);
 
