@@ -65,7 +65,7 @@ const createCard = (photo) => {
     const cardArticle = document.createElement("ARTICLE");
     const imgDiv = document.createElement("DIV");
     const photoImg = document.createElement("IMG");
-    const title = document.createElement("H1");
+    const title = document.createElement("H3");
     const favDiv = document.createElement("DIV");
     const favCheckbox = document.createElement("INPUT");
     //Asignas los valores de los elementos.
@@ -83,9 +83,7 @@ const createCard = (photo) => {
     imgDiv.append(photoImg);
     favDiv.append(favCheckbox);
 
-    cardArticle.append(imgDiv);
-    cardArticle.append(title);
-    cardArticle.append(favDiv);
+    cardArticle.append(imgDiv, title, favDiv);
 
     console.log(photo);
     return cardArticle;

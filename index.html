@@ -10,46 +10,61 @@
 </head>
 
 <body>
-    <header>
-        <!--Flitros ---------->
-        <!--Flitros palabras -->
-        <input type="text" id="wordFilter" name="wordFilter" />
-
-        <!--Flitros por orientación (vertical/horizontal) -->
-        <select id="orientationFilter" name="orientationFilter">
-            <option value="vertical">Vertical</option>
-            <option value="horizontal" selected>Horizontal</option>
-        </select>
+    <header class="headerContainer">
+        <p class="headerLogo">gu.pic</p>
+        
+        <div class="filtersContainer">
+            <!--Flitros ----------->
+            <!--Flitros palabras -->
+            <div class="searchBar">
+                <input type="text" id="wordFilter" name="wordFilter" placeholder="Haz una búsqueda..." />
+                <!--Botón lupa--------->
+                <button id="searchButton">icon</button>
+            </div>
+            <!--Flitros por orientación (vertical/horizontal) -->
+            <div class="otherFiltersContainer">
+                <select id="orientationFilter" name="orientationFilter">
+                    <option value="horizontal" selected>horizontal</option>
+                    <option value="vertical">vertical</option>
+                    <option value="Square">cuadrada</option>
+                </select>
+                <button id="favoritesButton">favoritos</button>
+            </div>
+        </div>
     </header>
 
 
 
     <!--Container todo  ------------------------------------------------->
     <main>
-        <section id="categoryList">
-            <article id="category1">
-                <div>
+        <section class="categoryListContainer">
+            <h1>Categorías más buscadas:</h1>
+            <div id="categoryList">
+            <article id="category1" class="categoryCard" >
+                <div class="imgDiv">
                     <img>
                 </div>
-                <h1>Category 1</h1>
+                <h2>Category 1</h2>
             </article>
 
-            <article id="category2">
-                <div>
+            <article id="category2" class="categoryCard" >
+                <div class="imgDiv">
                     <img>
                 </div>
-                <h1>Category 2</h1>
+                <h2>Category 2</h2>
             </article>
 
-            <article id="category3">
-                <div>
+            <article id="category3" class="categoryCard" >
+                <div class="imgDiv">
                     <img>
                 </div>
-                <h1>Category 3</h1>
+                <h2>Category 3</h2>
             </article>
+            </div>
+        </section>
 
             <!--Container imgs ------------>
-            <section id="cardsContainer">
+        <section id="cardsContainer">
 
                 <!--Card (DINAMICO) -->
                 <!-- <article class="card">
@@ -63,7 +78,7 @@
 
             </article> -->
 
-            </section>
+        </section>
 
             <!--Paginación (DINÁMICO) --->
             <div id="pagination">

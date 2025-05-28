@@ -1,26 +1,244 @@
+/* CSS RESET ------------------------------------------------------------ */
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: var(--fuente-base);
+    /*font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;*/
 }
 
-body {
-    background-color: #f5f5f5;
-    color: #333;
-    line-height: 1.6;
-}
 
-header {
-    background-color: #2c3e50;
-    padding: 1.5rem;
-    display: flex;
-    justify-content: center;
-    gap: 2rem;
-    flex-wrap: wrap;
-}
-
+/* Reseteo de inputs de formulario */
 input,
+select,
+textarea {
+  border: none;
+  outline: none;
+  appearance: none;
+  cursor: pointer;
+}
+
+/* Reseteo de botones */
+button {
+  border: none;
+  outline: none;
+  appearance: none;
+  cursor: pointer;
+}
+
+
+
+
+/* CSS GENERAL ------------------------------------------------------------ */
+
+/* Variables ----------------------------- */
+:root {
+/* Paleta de color */
+    --color-primario: #0D0D0D;
+    --color-secundario: #888C8C; 
+    --color-mediooscuro: #404040;
+    --color-medioclaro: #dbdbdb; 
+
+    --color-tipo-clara: #ffffff;  
+    --color-tipo-oscura: #000000;
+
+    --color-fondo-claro: #ffffff;  
+    --color-fondo-oscuro: #000000;
+
+    --color-acento: #32cd32;  
+    
+/* Tipografías */
+  --fuente-base: 'Inter', sans-serif;
+  --fuente-titulos: 'Playfair Display', serif;
+  --fuente-monospace: 'Fira Code', monospace;
+
+  --fuente-peso-bold: 700;
+  --fuente-peso-regular: 600;
+  --fuente-peso-light: 400;
+}
+
+/* Headers ---- */
+
+h1{
+    font-weight: var(--fuente-peso-regular);
+    font-size: 1.5em;
+}
+h2{
+    font-weight: var(--fuente-peso-regular);
+    font-size: 1em;
+}
+h3{
+    font-weight: var(--fuente-peso-light);
+}
+
+
+
+/* Contenedores --------------------------- */
+body {
+    background-color: var(--color-fondo-claro);
+    color: var(--color-tipo-oscura);
+    font-size: 1em;
+    font-family: var(--fuente-base);
+    width: 100%;
+}
+
+
+/* Botones ------------------------------- */
+
+
+
+/* CSS ESPECÍFICO ------------------------------------------------------------ */
+
+/* Header con filtros -------------------- */
+.headerContainer{
+    background-color: var(--color-fondo-oscuro);
+    color: var(--color-tipo-clara);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 2em;
+    padding: 2em;
+}
+
+.headerLogo{
+    font-weight: var(--fuente-peso-bold);
+    font-size: 2em;
+}
+
+.filtersContainer{
+    background-color: var(--color-fondo-oscuro);
+    color: var(--color-tipo-clara);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.75em;
+}
+
+.searchBar{
+    width: 100%;
+    display: flex;
+}
+
+.searchBar input{
+    padding: 1em 2em;
+    border-radius: 10em;
+    width: 90%;
+}
+
+.searchBar button{
+    padding: 1em;
+    border-radius: 10em; 
+}
+
+.otherFiltersContainer{
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.5rem; /* opcional: espaciado entre columnas */
+}
+
+.otherFiltersContainer select{
+    padding: 0.75em 2em;
+    background-color: var(--color-fondo-claro);
+    border-radius: 0.25em;
+    width: 100%;
+    text-align: center;
+}
+
+.otherFiltersContainer select:hover{
+    background-color: var(--color-medioclaro);
+}
+
+.otherFiltersContainer select option{
+    padding: 1em 2em;
+}
+
+.otherFiltersContainer button{
+    min-width: 100%;
+    text-align: center ;
+    border-radius: 0.25em;
+}
+
+
+
+/* Bloque Categorías --------------------- */
+.categoryListContainer{
+    background-color: var(--color-fondo-oscuro);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 1em 2em 3em 2em;
+    gap: 1.5em;
+
+}
+
+.categoryListContainer h1{
+    color: var(--color-tipo-clara);
+}
+
+#categoryList{
+    background-color: var(--color-fondo-oscuro);
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    gap: 0.5em;
+
+}
+
+.categoryCard{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    gap: 0.5em;
+    padding-bottom: 0.5em;
+    border-radius: 0.4em;
+    overflow: hidden;
+    background-color: var(--color-fondo-claro);
+
+}
+
+.imgDiv{
+    width: 100%;
+    aspect-ratio: 1 / 0.9;
+    background-color:var(--color-mediooscuro);
+}
+
+
+#cardsContainer{
+    background-color: var(--color-medioclaro);
+}
+
+
+
+
+
+/* Bloque Cards (galería)----------------- */
+
+/* Card ---------------- */
+
+/* Paginación ---------- */
+
+
+
+/* RESPONSIVE ------------------------------------------------------------ */
+
+
+
+
+
+
+/*EFECTOS ESPECIALES ----------------------------------------------------- */
+
+/*Iconos ----------*/
+/*Degradados ------*/
+/*Animaciones -----*/
+
+
+
+/* input,
 select {
     padding: 0.8rem 1.2rem;
     border-radius: 4px;
@@ -36,17 +254,15 @@ select:focus {
     box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
 }
 
-/* Main container */
-/* Contenedor principal */
+
 main {
     width: 100%;
     max-width: 1400px;
-    /* Ancho máximo para pantallas grandes */
     margin: 0 auto;
     padding: 20px;
 }
 
-/* Categorías */
+
 #categoryList {
     display: flex;
     flex-wrap: wrap;
@@ -91,8 +307,6 @@ main {
     color: #2c3e50;
 }
 
-/* Galería de imágenes */
-/* Estilos para la galería principal */
 
 #cardsContainer {
     display: grid;
@@ -102,11 +316,11 @@ main {
 }
 
 
-/* Estilos para cada card */
+
 .card {
     background: white;
     border-radius: 8px;
-    overflow: auto;
+    overflow: hidden;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     display: flex;
     flex-direction: column;
@@ -119,15 +333,12 @@ main {
 }
 
 
-/* Contenedor de la imagen */
 .card div:first-child {
     height: 100px;
     overflow: hidden;
     margin-bottom: 5px;
-    /* Solo 10px de separación hacia abajo */
 }
 
-/* Imagen dentro de la card */
 .card img {
     width: 100%;
     height: 100%;
@@ -140,31 +351,25 @@ main {
     transform: scale(1.05);
 }
 
-/* Contenido textual */
+
 
 .card h3 {
     padding: 0 10px;
     margin: 0 0 10px 0;
     font-size: 0.65rem;
     text-align: justify;
-    /* Texto justificado */
     color: #333;
     line-height: 1.4;
-    /* Espaciado entre líneas ajustado */
     font-weight: normal;
-    /* Peso normal (no negrita) */
     overflow: hidden;
 }
 
-/* Contenedor del checkbox */
+
 .card div {
     padding: 5px;
-    /* 5px en todos lados */
     display: flex;
     justify-content: center;
-    /* Centra horizontalmente */
     align-items: flex-start;
-    /* Alinea arriba verticalmente */
     background-color: #3f93e7;
     margin: 0;
     height: auto;
@@ -175,17 +380,13 @@ main {
     margin: 0;
     padding: 0;
     width: 16px;
-    /* Ancho estándar */
     height: 16px;
-    /* Alto estándar (misma medida que el ancho) */
     min-width: 16px;
-    /* Evita que se deforme */
     min-height: 16px;
-    /* Evita que se deforme */
     cursor: pointer;
 }
 
-/* Paginación */
+
 #pagination {
     display: flex;
     justify-content: center;
@@ -216,9 +417,9 @@ main {
 #pagination p {
     font-weight: bold;
     color: #2c3e50;
-}
+} */
 
-/* Responsive */
+/* Responsive
 @media (max-width: 768px) {
     header {
         flex-direction: column;
@@ -226,14 +427,15 @@ main {
         gap: 1rem;
     }
 
+    
     #cardsContainer {
         grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     }
-}
+    
 
-#categoryList article {
-    width: 100%;
-}
+    #categoryList article {
+        width: 100%;
+    }
 }
 
 @media (max-width: 480px) {
@@ -242,11 +444,10 @@ main {
     }
 
     .card div {
-        height: 250px;
-        /* Más alto en móviles para mejor visualización */
+        height: 250px; 
     }
 }
 
 #pagination {
     flex-wrap: wrap;
-}
+} */
