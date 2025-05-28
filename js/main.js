@@ -88,13 +88,11 @@ cardContainer.addEventListener("click", (ev) => {
 
 
 
-
-
-
 favoriteButton.addEventListener("click", (eve) => {
     // get Datos from 
     // obtengo los datos del localStorage. Luego pinto los datos
     const favoritesArray = JSON.parse(localStorage.getItem("favoritesArray")) || [];
+    console.log("favorites: " + favoritesArray)
     fillGallery(favoritesArray)
 
 })
@@ -150,23 +148,21 @@ const saveInLocalStorage = (id, title, image) => {
 
 //Evento para fetch categorias
 listCategory.addEventListener("click", async (ev) => {
-    if (ev.target.id === "ocean"){
-        const dataAPI = await getDataFromSearch(ev.target.id, orientationFilter.value, null); //Llama a la API pasándo por parámetro el query, la orientación y las keywords.
+    if (ev.target.id === "ocean") {
+        const dataAPI = await getDataFromSearch(ev.target.id, orientationFilter.value); //Llama a la API pasándo por parámetro el query, la orientación y las keywords.
         lastFetch = dataAPI;
-        fillGallery(dataAPI)//Llena la galería
+        fillGallery(dataAPI.photos)//Llena la galería
     }
-    if (ev.target.id === "flower"){
-        const dataAPI = await getDataFromSearch(ev.target.id, orientationFilter.value, null); //Llama a la API pasándo por parámetro el query, la orientación y las keywords.
+    if (ev.target.id === "flower") {
+        const dataAPI = await getDataFromSearch(ev.target.id, orientationFilter.value); //Llama a la API pasándo por parámetro el query, la orientación y las keywords.
         lastFetch = dataAPI;
-        fillGallery(dataAPI)//Llena la galería
+        fillGallery(dataAPI.photos)//Llena la galería
     }
-    if (ev.target.id === "nature"){
-        const dataAPI = await getDataFromSearch(ev.target.id, orientationFilter.value, null); //Llama a la API pasándo por parámetro el query, la orientación y las keywords.
+    if (ev.target.id === "nature") {
+        const dataAPI = await getDataFromSearch(ev.target.id, orientationFilter.value); //Llama a la API pasándo por parámetro el query, la orientación y las keywords.
         lastFetch = dataAPI;
-        fillGallery(dataAPI)//Llena la galería
+        fillGallery(dataAPI.photos)//Llena la galería
     }
-
-
 })
 
 
@@ -228,7 +224,7 @@ const obtainDataFromAPI = async (url) => {//Esta función se repite y queda auto
     try {
         const dataAPI = await fetch(url, {//Fetch necesita ("URL", {objeto con los ajustes de petición})
             headers: {
-                Authorization: "API_KEY" //Authorization es un objeto
+                Authorization: API_KEY //Authorization es un objeto
             }
         })
         if (dataAPI.ok) {
@@ -289,8 +285,7 @@ const createCard = (photo) => {
 const fillGallery = (photos) => { //Desestructurado de (json.photos)
 
     cardContainer.innerHTML = ""; //Vacía el contenedor previamente
-    
-    json.photos.forEach(element => {
+    photos.forEach(element => {
         const card = createCard(element)
         fragment.append(card);
     });
@@ -326,7 +321,7 @@ const fillCategory = ([objImg, title, category]) => {
 
     //console.log(ocean.photos[0].src.tiny);
     //console.log("imagen: ", imgOcean);
-    img.setAttribute("id",category);
+    img.setAttribute("id", category);
     article.setAttribute("id", `category${category}`);
     img.setAttribute("src", objImg.photos[0].src.tiny);
     titulo.innerHTML = title;
