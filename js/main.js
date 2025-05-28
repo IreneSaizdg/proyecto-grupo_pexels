@@ -68,6 +68,23 @@ async function manageOrientationChange() {
     //console.log(event.target.value) //target es el elemento del selector seleccionado.
 }
 
+//Evento para fetch categorias
+listCategory.addEventListener("click", async (ev) => {
+    if (ev.target.id === "ocean"){
+        const dataAPI = await getDataFromSearch(ev.target.id, orientationFilter.value, null); //Llama a la API pasándo por parámetro el query, la orientación y las keywords.
+        fillGallery(dataAPI)//Llena la galería
+    }
+    if (ev.target.id === "flower"){
+        const dataAPI = await getDataFromSearch(ev.target.id, orientationFilter.value, null); //Llama a la API pasándo por parámetro el query, la orientación y las keywords.
+        fillGallery(dataAPI)//Llena la galería
+    }
+    if (ev.target.id === "nature"){
+        const dataAPI = await getDataFromSearch(ev.target.id, orientationFilter.value, null); //Llama a la API pasándo por parámetro el query, la orientación y las keywords.
+        fillGallery(dataAPI)//Llena la galería
+    }
+
+
+})
 
 
 //FUNCIONES ----------------------------------------------------------------------->
@@ -97,8 +114,6 @@ const obtainDataFromAPI = async (url) => {//Esta función se repite y queda auto
         })
         if (dataAPI.ok) {
             const json = await dataAPI.json(); // El método .json() devuelve una promesa, por eso hay que poner el await.
-            //console.log("LastFetch: ", lastFetch);
-            //console.log("json", json.next_page);
             return json;
         } else {
             throw "No se consiguieron las imágenes solicitadas" //Error (mandar a catch)
@@ -136,7 +151,6 @@ const createCard = (photo) => {
     cardArticle.append(title);
     cardArticle.append(favDiv);
 
-    console.log(photo);
     return cardArticle;
 }
 
@@ -162,7 +176,7 @@ const createCategory = () => {
     arrCategory.forEach(async (item, indez, array) => {
         const objImg = await getImgCat(item.category);
         const title = item.name;
-        fillCategory([objImg, title]);
+        fillCategory([objImg, title, item.category]);
     })
 
 }
@@ -171,15 +185,12 @@ const getImgCat = async (query, porPagina = 1) => {
 
     const myImg = `https://api.pexels.com/v1/search?query=${query}&per_page=${porPagina}`;
     let img = await getDataFromSearch(myImg);
-    //console.log("getImgZ: ", img);
     return img;
 
 }
 
 
-const fillCategory = ([objImg, title]) => {
-    //listCategory.innerHTML = "";
-    console.log("Category", objImg);
+const fillCategory = ([objImg, title, category]) => {
     const article = document.createElement("ARTICLE");
     const divImg = document.createElement("DIV");
     const img = document.createElement("IMG");
@@ -187,7 +198,8 @@ const fillCategory = ([objImg, title]) => {
 
     //console.log(ocean.photos[0].src.tiny);
     //console.log("imagen: ", imgOcean);
-    article.setAttribute("id", `Category${title}`);
+    img.setAttribute("id",category);
+    article.setAttribute("id", `category${category}`);
     img.setAttribute("src", objImg.photos[0].src.tiny);
     titulo.innerHTML = title;
 
