@@ -34,7 +34,7 @@ const fragment = document.createDocumentFragment();
 
 const orientationFilter = document.querySelector("#orientationFilter")
 
-const favoriteButton = document.querySelector("#favoriteButton");
+const favoritesButton = document.querySelector("#favoritesButton");
 //Esto deberia de ser una variable de entorno
 const API_KEY = "yyWlCwJBhQa7uDLshqAo4lPIdhSd00VEz6p5vuix6srVMfJTnXEdiEYv";
 const URL_BASE = "https://api.pexels.com/v1/"
@@ -73,7 +73,7 @@ cardContainer.addEventListener("click", (ev) => {
     if (ev.target.matches(".favoriteCheckbox")) {
         const card = ev.target.parentElement.parentElement;
         const cardId = card.id;
-        const title = card.querySelector("h1").textContent;
+        const title = card.querySelector("h4").textContent;
         const img = card.querySelector("img").src;
         const checked = ev.target.checked
 
@@ -88,7 +88,7 @@ cardContainer.addEventListener("click", (ev) => {
 
 
 
-favoriteButton.addEventListener("click", (eve) => {
+favoritesButton.addEventListener("click", (eve) => {
     // get Datos from 
     // obtengo los datos del localStorage. Luego pinto los datos
     const favoritesArray = JSON.parse(localStorage.getItem("favoritesArray")) || [];
@@ -187,7 +187,7 @@ const filterByKeywords = async () => {
  * @param {Array} words 
  * @returns {Object}g
  */
-const getDataFromSearch = async (query, orientation, perPage = 15) => {
+const getDataFromSearch = async (query, orientation, perPage = 16) => {
     const myString = `${URL_BASE}search?query=${query}&orientation=${orientation}&per_page=${perPage}`;
     return await obtainDataFromAPI(myString); //Cuando invocamos esta función invoca también obtainDataFromAPI con nuestra nueva URL. 
 }
@@ -307,10 +307,12 @@ const fillCategory = ([objImg, title, category]) => {
     const article = document.createElement("ARTICLE");
     const divImg = document.createElement("DIV");
     const img = document.createElement("IMG");
-    const titulo = document.createElement("H1");
+    const titulo = document.createElement("H3");
 
-    img.setAttribute("id", category);
     article.setAttribute("id", `category${category}`);
+    article.classList.add("categoryCard");
+    divImg.classList.add("imgDiv")
+    img.setAttribute("id", category);
     img.classList.add("categoryFilter");
     img.setAttribute("src", objImg.photos[0].src.tiny);
     titulo.innerHTML = title;
