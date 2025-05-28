@@ -34,6 +34,11 @@ const fragment = document.createDocumentFragment();
 
 const orientationFilter = document.querySelector("#orientationFilter")
 
+const favoriteButton = document.querySelector("#favoriteButton");
+//Esto deberia de ser una variable de entorno
+const API_KEY = "yyWlCwJBhQa7uDLshqAo4lPIdhSd00VEz6p5vuix6srVMfJTnXEdiEYv";
+const URL_BASE = "https://api.pexels.com/v1/"
+
 // Ultima fetch realizada
 let lastFetch = "";
 
@@ -44,6 +49,7 @@ const arrCategory = [
     { category: "flower", name: "Flores" },
     { category: "nature", name: "Naturaleza" }
 ];
+
 
 //SearchInput ficticio
 const searchInput = {
@@ -63,6 +69,53 @@ searchButton.addEventListener("click", (ev) => {
 //Evento al cambiar la opción del selector (filtro por orientación)
 orientationFilter.addEventListener("change", manageOrientationChange);
 
+cardContainer.addEventListener("click", (ev) => {
+    if (ev.target.matches(".favoriteCheckbox")) {
+        const card = ev.target.parentElement.parentElement;
+        const cardId = card.id;
+        const title = card.querySelector("h1").textContent;
+        const img = card.querySelector("img").src;
+        const checked = ev.target.checked
+
+        if (checked) {
+            saveInLocalStorage(cardId, title, img);
+        } else {
+            deleteInLocalStorage(cardId);
+        }
+    }
+})
+
+
+
+
+favoriteButton.addEventListener("click", (eve) => {
+    // get Datos from 
+    // obtengo los datos del localStorage. Luego pinto los datos
+    const favoritesArray = JSON.parse(localStorage.getItem("favoritesArray")) || [];
+    console.log("favorites: " + favoritesArray)
+    fillGallery(favoritesArray)
+
+})
+
+
+//FUNCIONES ----------------------------------------------------------------------->
+/**
+ * Obtiene el array de imágenes favoritas desde el localStorage.
+ * @returns {Array} - Devuelve el array de objetos de imágenes favoritas,
+ *                    o un array vacío si no hay nada guardado.
+ */
+const getFavoritesArray = () => {
+    return JSON.parse(localStorage.getItem("favoritesArray")) || [];
+}
+
+/**
+ * Guarda un conjunto de imágenes favoritas en el localStorage.
+ * @param  {...any} elements - Una lista de objetos que representan imágenes favoritas.
+ */
+const setFavoritesArray = (...elements) => {
+    localStorage.setItem("favoritesArray", JSON.stringify(elements));
+}
+
 
 //Función para gestionar el cambio de orientación en el selector
 async function manageOrientationChange() {
@@ -70,39 +123,70 @@ async function manageOrientationChange() {
 
     const selectedOrientation = orientationFilter.value; //La orientación seleccionada será igual que la del selector seleccionado 
     const orientationData = await getDataFromSearch(query, selectedOrientation); //Llama a la función 
-    fillGallery(orientationData); //Llena la galería en base a la data de orientación. 
+    fillGallery(orientationData.photos); //Llena la galería en base a la data de orientación. 
 
     //console.log(event.target.value) //target es el elemento del selector seleccionado.
 }
 
+
+/**
+ * Guarda una imagen en la seccion de favoritos dentro de  local storage.
+ * @param {number} id - Identificador único de la imagen.
+ * @param {string} title - Título o descripción alternativa de la imagen.
+ * @param {string} image - URL de la imagen (formato pequeño).
+ */
+const saveInLocalStorage = (id, title, image) => {
+    const imgObject = {
+        id: id,
+        alt: title,
+        src: { tiny: image }
+    }
+    const favoritesArray = getFavoritesArray();
+    setFavoritesArray(...favoritesArray, imgObject);
+}
+
+
 //Evento para fetch categorias
 listCategory.addEventListener("click", async (ev) => {
-    if (ev.target.id === "ocean"){
-        const dataAPI = await getDataFromSearch(ev.target.id, orientationFilter.value, null); //Llama a la API pasándo por parámetro el query, la orientación y las keywords.
-        fillGallery(dataAPI)//Llena la galería
+    if (ev.target.id === "ocean") {
+        const dataAPI = await getDataFromSearch(ev.target.id, orientationFilter.value); //Llama a la API pasándo por parámetro el query, la orientación y las keywords.
+        lastFetch = dataAPI;
+        fillGallery(dataAPI.photos)//Llena la galería
     }
-    if (ev.target.id === "flower"){
-        const dataAPI = await getDataFromSearch(ev.target.id, orientationFilter.value, null); //Llama a la API pasándo por parámetro el query, la orientación y las keywords.
-        fillGallery(dataAPI)//Llena la galería
+    if (ev.target.id === "flower") {
+        const dataAPI = await getDataFromSearch(ev.target.id, orientationFilter.value); //Llama a la API pasándo por parámetro el query, la orientación y las keywords.
+        lastFetch = dataAPI;
+        fillGallery(dataAPI.photos)//Llena la galería
     }
-    if (ev.target.id === "nature"){
-        const dataAPI = await getDataFromSearch(ev.target.id, orientationFilter.value, null); //Llama a la API pasándo por parámetro el query, la orientación y las keywords.
-        fillGallery(dataAPI)//Llena la galería
+    if (ev.target.id === "nature") {
+        const dataAPI = await getDataFromSearch(ev.target.id, orientationFilter.value); //Llama a la API pasándo por parámetro el query, la orientación y las keywords.
+        lastFetch = dataAPI;
+        fillGallery(dataAPI.photos)//Llena la galería
     }
-
-
 })
 
 
-//FUNCIONES ----------------------------------------------------------------------->
+/**
+ * Elimina una imagen del local storage usando su ID.
+ * @param {Number} id - Identificador de la imagen a eliminar.
+ */
+const deleteInLocalStorage = (id) => {
+    const favoritesArray = JSON.parse(localStorage.getItem("favoritesArray")) || [];
+    const favoritesArrayFiltered = favoritesArray.filter(element => {
+        return element.id != id;
+    })
+    setFavoritesArray(...favoritesArrayFiltered);
+}
+
 /**
  * Rellena la galería con la fotos obtenidas usando las keywords en el filtro.
  */
 const filterByKeywords = async () => {
     searchButton.disabled = true;
     const filterVlue = wordFilter.value.trim();
-    const dataAPI = await getDataFromSearch(filterVlue, "landscape", null);
-    fillGallery(dataAPI);
+    const dataAPI = await getDataFromSearch(filterVlue, "landscape");
+    fillGallery(dataAPI.photos);
+    lastFetch = dataAPI;
     searchButton.disabled = false;
 }
 
@@ -114,10 +198,22 @@ const filterByKeywords = async () => {
  * @param {Array} words 
  * @returns {Object}g
  */
-const getDataFromSearch = async (query, orientation, words) => {
-    const myString = `https://api.pexels.com/v1/search?query=${query}&orientation=${orientation}`;
+const getDataFromSearch = async (query, orientation, perPage = 15) => {
+    const myString = `${URL_BASE}search?query=${query}&orientation=${orientation}&per_page=${perPage}`;
     return await obtainDataFromAPI(myString); //Cuando invocamos esta función invoca también obtainDataFromAPI con nuestra nueva URL. 
 }
+
+
+/**
+ * Obtener datos con el uso del endpoint photo.
+ * @param {number} id identificador de la imagen a buscar.
+ * @returns 
+ */
+const getDataFromPhoto = async (id) => {
+    const myString = `${URL_BASE}photo?id=${id}`;
+    return await obtainDataFromAPI(myString);
+}
+
 
 /**
  * Realiza un fetch a la API de pexels con una url.
@@ -128,7 +224,7 @@ const obtainDataFromAPI = async (url) => {//Esta función se repite y queda auto
     try {
         const dataAPI = await fetch(url, {//Fetch necesita ("URL", {objeto con los ajustes de petición})
             headers: {
-                Authorization: "yyWlCwJBhQa7uDLshqAo4lPIdhSd00VEz6p5vuix6srVMfJTnXEdiEYv" //Authorization es un objeto
+                Authorization: API_KEY //Authorization es un objeto
             }
         })
         if (dataAPI.ok) {
@@ -137,12 +233,13 @@ const obtainDataFromAPI = async (url) => {//Esta función se repite y queda auto
         } else {
             throw "No se consiguieron las imágenes solicitadas" //Error (mandar a catch)
         }
-
     } catch (error) {
         console.log(error); //Coje la info del throw
     }
 
 }
+
+
 const createCard = (photo) => {
     //Creas los elementos.
     const cardArticle = document.createElement("ARTICLE");
@@ -153,6 +250,7 @@ const createCard = (photo) => {
     const favCheckbox = document.createElement("INPUT");
     //Asignas los valores de los elementos.
     cardArticle.classList.add("card");
+    cardArticle.id = photo.id;
 
     photoImg.src = photo.src.tiny;
     photoImg.alt = photo.alt
@@ -161,6 +259,12 @@ const createCard = (photo) => {
     favCheckbox.type = "checkbox";
     favCheckbox.id = "favoriteImgs";
     favCheckbox.name = "favoriteImgs";
+    favCheckbox.classList.add("favoriteCheckbox")
+    const favoritesArray = JSON.parse(localStorage.getItem("favoritesArray")) || [];
+    const cardExistInFavorite = favoritesArray.find(element => {
+        return element.id == photo.id;
+    });
+    favCheckbox.checked = cardExistInFavorite
 
     //Appends
     imgDiv.append(photoImg);
@@ -178,10 +282,10 @@ const createCard = (photo) => {
  * @param {Object} -> Array con todos los datos de los objetos photos
  */
 
-const fillGallery = (json) => { //Desestructurado de (json.photos)
+const fillGallery = (photos) => { //Desestructurado de (json.photos)
+
     cardContainer.innerHTML = ""; //Vacía el contenedor previamente
-    lastFetch = json;
-    json.photos.forEach(element => {
+    photos.forEach(element => {
         const card = createCard(element)
         fragment.append(card);
     });
@@ -217,7 +321,7 @@ const fillCategory = ([objImg, title, category]) => {
 
     //console.log(ocean.photos[0].src.tiny);
     //console.log("imagen: ", imgOcean);
-    img.setAttribute("id",category);
+    img.setAttribute("id", category);
     article.setAttribute("id", `category${category}`);
     img.setAttribute("src", objImg.photos[0].src.tiny);
     titulo.innerHTML = title;
@@ -230,9 +334,6 @@ const fillCategory = ([objImg, title, category]) => {
 }
 
 
-
-
-
 //INVOCACIONES -------------------------------------------------------------------->
 
 /**
@@ -240,9 +341,11 @@ const fillCategory = ([objImg, title, category]) => {
  */
 //PROVISIONAL
 const init = async () => { //init -> Inicializa
-    const dataAPI = await getDataFromSearch(searchInput.value, orientationFilter.value, null); //Llama a la API pasándo por parámetro el query, la orientación y las keywords.
-    fillGallery(dataAPI)//Llena la galería
+
+    const dataAPI = await getDataFromSearch(searchInput.value, orientationFilter.value); //Llama a la API pasándo por parámetro el query, la orientación y las keywords.
+    fillGallery(dataAPI.photos)//Llena la galería
     createCategory(arrCategory); // filterCategory
+
 }
 
 init()
