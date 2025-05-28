@@ -37,9 +37,9 @@ let lastFetch = "";
 
 // array de Categorias
 const arrCategory = [
-    {category: "ocean", name:"Oceano"},
-    {category: "flower", name: "Flores"},
-    {category: "nature", name: "Naturaleza"}
+    { category: "ocean", name: "Oceano" },
+    { category: "flower", name: "Flores" },
+    { category: "nature", name: "Naturaleza" }
 ];
 
 //SearchInput ficticio
@@ -145,10 +145,10 @@ const createCard = (photo) => {
  * @param {Object} -> Array con todos los datos de los objetos photos
  */
 
-const fillGallery = ({ photos }) => { //Desestructurado de (json.photos)
+const fillGallery = (json) => { //Desestructurado de (json.photos)
     cardContainer.innerHTML = ""; //Vacía el contenedor previamente
     lastFetch = json;
-    photos.forEach(element => {
+    json.photos.forEach(element => {
         const card = createCard(element)
         fragment.append(card);
     });
@@ -159,7 +159,7 @@ const fillGallery = ({ photos }) => { //Desestructurado de (json.photos)
 // filterCategory --
 
 const createCategory = () => {
-    arrCategory.forEach(async(item, indez, array) => {
+    arrCategory.forEach(async (item, indez, array) => {
         const objImg = await getImgCat(item.category);
         const title = item.name;
         fillCategory([objImg, title]);
@@ -190,7 +190,7 @@ const fillCategory = ([objImg, title]) => {
     article.setAttribute("id", `Category${title}`);
     img.setAttribute("src", objImg.photos[0].src.tiny);
     titulo.innerHTML = title;
-    
+
     divImg.append(img);
     article.append(divImg, titulo)
     fragment.append(article);
