@@ -8,19 +8,34 @@
 // LLAMADAS A API -> Filtros en el fetch: Categorias, Palabras, orientación, Cantidad de imagenes, 
 //2EndPoints: (búsqueda) https://api.pexels.com/v1/search    (imagen por id para favoritos) https://api.pexels.com/v1/photos/:id
 
+/* Categorias
 
+    3 categorias -> 3 divs
+    fetch de una imagen por categoria
+    pintar imagen y titulo
+*/
 
 
 //VARIABLES ------------------------------------------------------------------------>
 
 //Elementos del DOM
 const cardContainer = document.querySelector("#cardsContainer");
+
+const listCategory = document.querySelector("#categoryList");
+
+const paginacion = document.querySelector("#pagination");
+
 const fragment = document.createDocumentFragment();
 
+// Ultima fetch realizada
+let lastFetch = "";
 
+// array de Categorias
+const arrCategory = ["ocean", "flower", "nature"];
 
 
 //EVENTOS ------------------------------------------------------------------------->
+
 
 
 //FUNCIONES ----------------------------------------------------------------------->
@@ -50,6 +65,8 @@ const obtainDataFromAPI = async (url) => {//Esta función se repite y queda auto
         })
         if (dataAPI.ok) {
             const json = await dataAPI.json(); // El método .json() devuelve una promesa, por eso hay que poner el await.
+            console.log("LastFetch: ", lastFetch);
+            console.log("json", json.next_page);
             return json;
         } else {
             throw "No se consiguieron las imágenes solicitadas" //Error (mandar a catch)
@@ -66,9 +83,10 @@ const obtainDataFromAPI = async (url) => {//Esta función se repite y queda auto
  * Pinta las cards en la galeria.
  * @param {Object} -> Array con todos los datos de los objetos photos
  */
-const fillGallery = ({ photos }) => { // Desestructurado de (json.photos)
+const fillGallery = (json) => { // Desestructurado de (json.photos)
     cardContainer.innerHTML = ""; //Vacía el contenedor previamente
-    photos.forEach(element => {
+    json.photos.forEach(element => {
+        lastFetch = json;
         //TODO: meter contenido de card.
         const photo = document.createElement("IMG")
         photo.src = element.src.tiny;
@@ -78,6 +96,46 @@ const fillGallery = ({ photos }) => { // Desestructurado de (json.photos)
 
 }
 
+// filterCategory --
+
+const createCategory = () => {
+    arrCategory.forEach(async(item, indez, array) => {
+        const objImg = await getImgCat(item);
+        const itm = item;
+        fillCategory([objImg, itm]);
+    })
+
+}
+
+const getImgCat = async (query, porPagina = 1) => {
+
+    const myImg = `https://api.pexels.com/v1/search?query=${query}&per_page=${porPagina}`;
+    let img = await getDataFromSearch(myImg);
+    //console.log("getImgZ: ", img);
+    return img;
+
+}
+
+
+const fillCategory = ([objImg, itm]) => {
+    //listCategory.innerHTML = "";
+    console.log("Category", objImg);
+    const article = document.createElement("ARTICLE");
+    const divImg = document.createElement("DIV");
+    const img = document.createElement("IMG");
+    const titulo = document.createElement("H1");
+
+    //console.log(ocean.photos[0].src.tiny);
+    //console.log("imagen: ", imgOcean);
+    img.setAttribute("src", objImg.photos[0].src.tiny);
+    titulo.innerHTML = itm.charAt(0).toUpperCase() + itm.slice(1);
+    
+    divImg.append(img);
+    article.append(divImg, titulo)
+    fragment.append(article);
+    listCategory.append(fragment);
+
+}
 
 //INVOCACIONES -------------------------------------------------------------------->
 
@@ -88,6 +146,7 @@ const fillGallery = ({ photos }) => { // Desestructurado de (json.photos)
 const init = async () => { //init -> Inicializa
     const dataAPI = await getDataFromSearch("ocean", "landscape", null); //Llama a la API pasándo por parámetro el query, la orientación y las keywords.
     fillGallery(dataAPI)//Llena la galería
+    createCategory(arrCategory); // filterCategory
 }
 
 init()
