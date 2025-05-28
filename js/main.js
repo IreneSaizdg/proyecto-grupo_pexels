@@ -23,6 +23,10 @@
 //Elementos del DOM
 const cardContainer = document.querySelector("#cardsContainer");
 
+const wordFilter = document.querySelector("#wordFilter");
+const searchButton = document.querySelector("#searchButton")
+const fragment = document.createDocumentFragment();
+
 const listCategory = document.querySelector("#categoryList");
 
 const paginacion = document.querySelector("#pagination");
@@ -50,6 +54,10 @@ const searchInput = {
 
 
 //EVENTOS ------------------------------------------------------------------------->
+
+searchButton.addEventListener("click", (ev) => {
+    filterByKeywords();
+})
 
 
 
@@ -89,11 +97,23 @@ listCategory.addEventListener("click", async (ev) => {
 
 //FUNCIONES ----------------------------------------------------------------------->
 /**
+ * Rellena la galería con la fotos obtenidas usando las keywords en el filtro.
+ */
+const filterByKeywords = async () => {
+    searchButton.disabled = true;
+    const filterVlue = wordFilter.value.trim();
+    const dataAPI = await getDataFromSearch(filterVlue, "landscape", null);
+    fillGallery(dataAPI);
+    searchButton.disabled = false;
+}
+
+
+/**
  * Obtener datos con el uso del endpoint Search.
  * @param {string} query 
  * @param {string} orientation 
  * @param {Array} words 
- * @returns 
+ * @returns {Object}g
  */
 const getDataFromSearch = async (query, orientation, words) => {
     const myString = `https://api.pexels.com/v1/search?query=${query}&orientation=${orientation}`;
