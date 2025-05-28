@@ -20,7 +20,7 @@ const cardContainer = document.querySelector("#cardsContainer");
 const wordFilter = document.querySelector("#wordFilter");
 const searchButton = document.querySelector("#searchButton")
 const fragment = document.createDocumentFragment();
-
+const favoriteButton = document.querySelector("#favoriteButton");
 
 const orientationFilter = document.querySelector("#orientationFilter")
 
@@ -40,6 +40,26 @@ searchButton.addEventListener("click", (ev) => {
 //Evento al cambiar la opción del selector (filtro por orientación)
 orientationFilter.addEventListener("change", manageOrientationChange);
 
+cardContainer.addEventListener("click", (ev) => {
+    if (ev.target.matches(".favoriteCheckbox")) {
+        const card = ev.target.parentElement.parentElement;
+        const cardId = card.id;
+        const title = card.querySelector("h1").textContent;
+        const img = card.querySelector("img").src;
+        const checked = ev.target.checked
+
+        // console.log("checkbox: ", card.id)
+        if (checked) {
+            saveInLocalStorage(cardId, title, img);
+        } else {
+            deleteInLocalStorage(cardId);
+        }
+
+    }
+})
+
+
+
 
 //Función para gestionar el cambio de orientación en el selector
 async function manageOrientationChange() {
@@ -47,14 +67,45 @@ async function manageOrientationChange() {
 
     const selectedOrientation = orientationFilter.value; //La orientación seleccionada será igual que la del selector seleccionado 
     const orientationData = await getDataFromSearch(query, selectedOrientation); //Llama a la función 
-    fillGallery(orientationData); //Llena la galería en base a la data de orientación. 
+    fillGallery(orientationData.photos); //Llena la galería en base a la data de orientación. 
 
     //console.log(event.target.value) //target es el elemento del selector seleccionado.
 }
 
+favoriteButton.addEventListener("click", (eve) => {
+    // get Datos from 
+    // obtengo los datos del localStorage. Luego pinto los datos
+    const favoritesArray = JSON.parse(localStorage.getItem("favoritesArray")) || [];
+    fillGallery(favoritesArray)
+
+})
 
 
 //FUNCIONES ----------------------------------------------------------------------->
+
+
+const saveInLocalStorage = (id, title, image) => {
+    const imgObject = {
+        id: id,
+        alt: title,
+        src: { tiny: image }
+    }
+    const favoritesArray = JSON.parse(localStorage.getItem("favoritesArray")) || [];
+    console.log(favoritesArray)
+    favoritesArray.push(imgObject);
+    localStorage.setItem("favoritesArray", JSON.stringify(favoritesArray))
+
+}
+
+const deleteInLocalStorage = (id) => {
+    const favoritesArray = JSON.parse(localStorage.getItem("favoritesArray")) || [];
+    const favoritesArrayFiltered = favoritesArray.filter(element => {
+        return element.id != id;
+    })
+    console.log(favoritesArrayFiltered)
+    localStorage.setItem("favoritesArray", JSON.stringify(favoritesArrayFiltered))
+}
+
 /**
  * Rellena la galería con la fotos obtenidas usando las keywords en el filtro.
  */
@@ -62,7 +113,7 @@ const filterByKeywords = async () => {
     searchButton.disabled = true;
     const filterVlue = wordFilter.value.trim();
     const dataAPI = await getDataFromSearch(filterVlue, "landscape", null);
-    fillGallery(dataAPI);
+    fillGallery(dataAPI.photos);
     searchButton.disabled = false;
 }
 
@@ -113,6 +164,7 @@ const createCard = (photo) => {
     const favCheckbox = document.createElement("INPUT");
     //Asignas los valores de los elementos.
     cardArticle.classList.add("card");
+    cardArticle.id = photo.id;
 
     photoImg.src = photo.src.tiny;
     photoImg.alt = photo.alt
@@ -121,6 +173,13 @@ const createCard = (photo) => {
     favCheckbox.type = "checkbox";
     favCheckbox.id = "favoriteImgs";
     favCheckbox.name = "favoriteImgs";
+    favCheckbox.classList.add("favoriteCheckbox")
+    const favoritesArray = JSON.parse(localStorage.getItem("favoritesArray")) || [];
+    const cardExistInFavorite = favoritesArray.find(element => {
+        return Number(element.id) === photo.id;
+    });
+    console.log(cardExistInFavorite);
+    favCheckbox.checked = cardExistInFavorite
 
     //Appends
     imgDiv.append(photoImg);
@@ -130,7 +189,7 @@ const createCard = (photo) => {
     cardArticle.append(title);
     cardArticle.append(favDiv);
 
-    console.log(photo);
+    // console.log(photo);
     return cardArticle;
 }
 
@@ -138,7 +197,7 @@ const createCard = (photo) => {
  * Pinta las cards en la galeria.
  * @param {Object} -> Array con todos los datos de los objetos photos
  */
-const fillGallery = ({ photos }) => { //Desestructurado de (json.photos)
+const fillGallery = (photos) => { //Desestructurado de (json.photos)
     cardContainer.innerHTML = ""; //Vacía el contenedor previamente
     photos.forEach(element => {
         const card = createCard(element)
@@ -161,7 +220,7 @@ const fillGallery = ({ photos }) => { //Desestructurado de (json.photos)
 //PROVISIONAL
 const init = async () => { //init -> Inicializa
     const dataAPI = await getDataFromSearch(searchInput.value, orientationFilter.value, null); //Llama a la API pasándo por parámetro el query, la orientación y las keywords.
-    fillGallery(dataAPI)//Llena la galería
+    fillGallery(dataAPI.photos)//Llena la galería
 }
 
 init()
