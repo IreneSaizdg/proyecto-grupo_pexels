@@ -109,7 +109,36 @@ const obtainDataFromAPI = async (url) => {//Esta función se repite y queda auto
     }
 
 }
+const createCard = (photo) => {
+    //Creas los elementos.
+    const cardArticle = document.createElement("ARTICLE");
+    const imgDiv = document.createElement("DIV");
+    const photoImg = document.createElement("IMG");
+    const title = document.createElement("H1");
+    const favDiv = document.createElement("DIV");
+    const favCheckbox = document.createElement("INPUT");
+    //Asignas los valores de los elementos.
+    cardArticle.classList.add("card");
 
+    photoImg.src = photo.src.tiny;
+    photoImg.alt = photo.alt
+    title.textContent = photo.alt;
+
+    favCheckbox.type = "checkbox";
+    favCheckbox.id = "favoriteImgs";
+    favCheckbox.name = "favoriteImgs";
+
+    //Appends
+    imgDiv.append(photoImg);
+    favDiv.append(favCheckbox);
+
+    cardArticle.append(imgDiv);
+    cardArticle.append(title);
+    cardArticle.append(favDiv);
+
+    console.log(photo);
+    return cardArticle;
+}
 
 /**
  * Pinta las cards en la galeria.
@@ -118,11 +147,8 @@ const obtainDataFromAPI = async (url) => {//Esta función se repite y queda auto
 const fillGallery = ({ photos }) => { //Desestructurado de (json.photos)
     cardContainer.innerHTML = ""; //Vacía el contenedor previamente
     photos.forEach(element => {
-        //TODO: meter contenido de card.
-        const photo = document.createElement("IMG")
-        photo.src = element.src.tiny;
-
-        fragment.append(photo);
+        const card = createCard(element)
+        fragment.append(card);
     });
     cardContainer.append(fragment)
 
