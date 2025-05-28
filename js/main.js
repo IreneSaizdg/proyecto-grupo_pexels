@@ -148,19 +148,8 @@ const saveInLocalStorage = (id, title, image) => {
 
 //Evento para fetch categorias
 listCategory.addEventListener("click", async (ev) => {
-    if (ev.target.id === "ocean") {
+    if (ev.target.matches(".categoryFilter")) {
         const dataAPI = await getDataFromSearch(ev.target.id, orientationFilter.value); //Llama a la API pasándo por parámetro el query, la orientación y las keywords.
-        lastFetch = dataAPI;
-        fillGallery(dataAPI.photos)//Llena la galería
-    }
-    if (ev.target.id === "flower") {
-        const dataAPI = await getDataFromSearch(ev.target.id, orientationFilter.value); //Llama a la API pasándo por parámetro el query, la orientación y las keywords.
-        lastFetch = dataAPI;
-        fillGallery(dataAPI.photos)//Llena la galería
-    }
-    if (ev.target.id === "nature") {
-        const dataAPI = await getDataFromSearch(ev.target.id, orientationFilter.value); //Llama a la API pasándo por parámetro el query, la orientación y las keywords.
-        lastFetch = dataAPI;
         fillGallery(dataAPI.photos)//Llena la galería
     }
 })
@@ -297,18 +286,10 @@ const fillGallery = (photos) => { //Desestructurado de (json.photos)
 
 const createCategory = () => {
     arrCategory.forEach(async (item, indez, array) => {
-        const objImg = await getImgCat(item.category);
+        const objImg = await getDataFromSearch(item.category, orientationFilter, 1)
         const title = item.name;
         fillCategory([objImg, title, item.category]);
     })
-
-}
-
-const getImgCat = async (query, porPagina = 1) => {
-
-    const myImg = `https://api.pexels.com/v1/search?query=${query}&per_page=${porPagina}`;
-    let img = await getDataFromSearch(myImg);
-    return img;
 
 }
 
@@ -319,10 +300,9 @@ const fillCategory = ([objImg, title, category]) => {
     const img = document.createElement("IMG");
     const titulo = document.createElement("H1");
 
-    //console.log(ocean.photos[0].src.tiny);
-    //console.log("imagen: ", imgOcean);
     img.setAttribute("id", category);
     article.setAttribute("id", `category${category}`);
+    img.classList.add("categoryFilter");
     img.setAttribute("src", objImg.photos[0].src.tiny);
     titulo.innerHTML = title;
 
