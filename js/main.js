@@ -69,8 +69,8 @@ const obtainDataFromAPI = async (url) => {//Esta función se repite y queda auto
         })
         if (dataAPI.ok) {
             const json = await dataAPI.json(); // El método .json() devuelve una promesa, por eso hay que poner el await.
-            console.log("LastFetch: ", lastFetch);
-            console.log("json", json.next_page);
+            //console.log("LastFetch: ", lastFetch);
+            //console.log("json", json.next_page);
             return json;
         } else {
             throw "No se consiguieron las imágenes solicitadas" //Error (mandar a catch)
@@ -131,6 +131,7 @@ const fillCategory = ([objImg, title]) => {
 
     //console.log(ocean.photos[0].src.tiny);
     //console.log("imagen: ", imgOcean);
+    article.setAttribute("id", `Category${title}`);
     img.setAttribute("src", objImg.photos[0].src.tiny);
     titulo.innerHTML = title;
     
