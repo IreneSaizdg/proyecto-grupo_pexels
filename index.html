@@ -13,11 +13,8 @@
     <header>
         <!--Flitros ---------->
         <!--Flitros palabras -->
-        <div>
-            <input type="text" id="wordFilter" name="wordFilter" />
-            <button id="searchButton">Search</button>
-        </div>
-
+        <input type="text" id="wordFilter" name="wordFilter" />
+        <!-- TODO: Añadir Submit -->
 
         <!--Flitros por orientación (vertical/horizontal) -->
         <select id="orientationFilter" name="orientationFilter">
@@ -72,12 +69,13 @@
 
             <!--Paginación (DINÁMICO) --->
             <div id="pagination">
-                <button>←←</button>
-                <button>←</button>
-                <p>Número actual</p> <!--Dinámico (más números)--->
-                <button>→</button>
+                <button id="firstPage">←←</button>
+                <button id="beforePage">←</button>
+                <p id="actualPage">Número actual</p> <!--Dinámico (más números)--->
+                <button id="nextPage">→</button>
                 <button>→→</button>
             </div>
+
     </main>
 
     <script src="/js/main.js"></script>

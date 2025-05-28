@@ -24,11 +24,13 @@
 const cardContainer = document.querySelector("#cardsContainer");
 
 const wordFilter = document.querySelector("#wordFilter");
-const searchButton = document.querySelector("#searchButton")
+//const searchButton = document.querySelector("#searchButton")
 
 const listCategory = document.querySelector("#categoryList");
 
+//Paginación
 const paginacion = document.querySelector("#pagination");
+const actualPagina = document.querySelector("#actualPage");
 
 const fragment = document.createDocumentFragment();
 
@@ -41,7 +43,7 @@ let lastFetch = "";
 // array de Categorias
 const arrCategory = [
     { category: "ocean", name: "Oceano" },
-    { category: "flower", name: "Flores" },
+    { category: "people", name: "Personas" },
     { category: "nature", name: "Naturaleza" }
 ];
 
@@ -54,9 +56,9 @@ const searchInput = {
 
 //EVENTOS ------------------------------------------------------------------------->
 
-searchButton.addEventListener("click", (ev) => {
+/* searchButton.addEventListener("click", (ev) => {
     filterByKeywords();
-})
+}) */
 
 
 
@@ -77,20 +79,38 @@ async function manageOrientationChange() {
 
 //Evento para fetch categorias
 listCategory.addEventListener("click", async (ev) => {
-    if (ev.target.id === "ocean"){
+    if (ev.target.id === arrCategory[0].category){
         const dataAPI = await getDataFromSearch(ev.target.id, orientationFilter.value, null); //Llama a la API pasándo por parámetro el query, la orientación y las keywords.
         fillGallery(dataAPI)//Llena la galería
     }
-    if (ev.target.id === "flower"){
+    if (ev.target.id === arrCategory[1].category){
         const dataAPI = await getDataFromSearch(ev.target.id, orientationFilter.value, null); //Llama a la API pasándo por parámetro el query, la orientación y las keywords.
         fillGallery(dataAPI)//Llena la galería
     }
-    if (ev.target.id === "nature"){
+    if (ev.target.id === arrCategory[2].category){
         const dataAPI = await getDataFromSearch(ev.target.id, orientationFilter.value, null); //Llama a la API pasándo por parámetro el query, la orientación y las keywords.
         fillGallery(dataAPI)//Llena la galería
     }
+})
 
-
+// Evento paginación
+paginacion.addEventListener("click", (ev) => {
+    console.log(ev.target.id);
+    if (ev.target.id === "nextPage"){
+        if (lastFetch.next_page){
+            console.log("Next page: ", lastFetch.next_page);
+            nextPage(lastFetch);
+        }
+    }
+    if (ev.target.id === "beforePage"){
+        if (lastFetch.prev_page){
+            console.log("prev page: ", lastFetch.prev_page);
+            prevPage(lastFetch);
+        }
+    }
+/*      if (ev.target.id === "firstPage"){
+        firstPage(lastFetch);
+    } */
 })
 
 
@@ -114,8 +134,8 @@ const filterByKeywords = async () => {
  * @param {Array} words 
  * @returns {Object}g
  */
-const getDataFromSearch = async (query, orientation, words) => {
-    const myString = `https://api.pexels.com/v1/search?query=${query}&orientation=${orientation}`;
+const getDataFromSearch = async (query, orientation = "landscape", page = 1,  words) => {
+    const myString = `https://api.pexels.com/v1/search?query=${query}&orientation=${orientation}&page=${page}`;
     return await obtainDataFromAPI(myString); //Cuando invocamos esta función invoca también obtainDataFromAPI con nuestra nueva URL. 
 }
 
@@ -183,6 +203,7 @@ const fillGallery = (json) => { //Desestructurado de (json.photos)
     lastFetch = json;
     json.photos.forEach(element => {
         const card = createCard(element)
+        actualPagina.innerHTML = json.page;
         fragment.append(card);
     });
     cardContainer.append(fragment)
@@ -229,8 +250,30 @@ const fillCategory = ([objImg, title, category]) => {
 
 }
 
+// Paginación
 
+const nextPage = async (json) => {
+    console.log("next page: ", json);
+    const fetch = await obtainDataFromAPI(json.next_page);
+    actualPagina.innerHTML = json.page+1;
+    fillGallery(fetch);
+}
 
+const prevPage = async (json) => {
+    console.log("prev page: ", json);
+    const fetch = await obtainDataFromAPI(json.prev_page);
+    actualPagina.innerHTML = json.page-1;
+    fillGallery(fetch);
+}
+
+const firstPage = async (json) => {
+    console.log("first page: ", json);
+    //const url = `https://api.pexels.com/v1/search?query=${}&orientation=${orientation}&page=${page}`
+    const fetch = await getDataFromSearch(json);
+    actualPagina.innerHTML = 1;
+    console.log("first: ", fetch);
+    fillGallery(fetch);
+}
 
 
 //INVOCACIONES -------------------------------------------------------------------->
