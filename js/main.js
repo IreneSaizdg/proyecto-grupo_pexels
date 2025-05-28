@@ -25,7 +25,6 @@ const cardContainer = document.querySelector("#cardsContainer");
 
 const wordFilter = document.querySelector("#wordFilter");
 const searchButton = document.querySelector("#searchButton")
-const fragment = document.createDocumentFragment();
 
 const listCategory = document.querySelector("#categoryList");
 
