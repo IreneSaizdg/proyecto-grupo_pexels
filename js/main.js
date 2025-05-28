@@ -10,19 +10,41 @@
 */
 
 
+/* Categorias
 
+    3 categorias -> 3 divs
+    fetch de una imagen por categoria
+    pintar imagen y titulo
+*/
 
 
 //VARIABLES ------------------------------------------------------------------------>
 
 //Elementos del DOM
 const cardContainer = document.querySelector("#cardsContainer");
+
 const wordFilter = document.querySelector("#wordFilter");
 const searchButton = document.querySelector("#searchButton")
 const fragment = document.createDocumentFragment();
 
+const listCategory = document.querySelector("#categoryList");
+
+const paginacion = document.querySelector("#pagination");
+
+const fragment = document.createDocumentFragment();
 
 const orientationFilter = document.querySelector("#orientationFilter")
+
+// Ultima fetch realizada
+let lastFetch = "";
+
+
+// array de Categorias
+const arrCategory = [
+    { category: "ocean", name: "Oceano" },
+    { category: "flower", name: "Flores" },
+    { category: "nature", name: "Naturaleza" }
+];
 
 //SearchInput ficticio
 const searchInput = {
@@ -30,11 +52,13 @@ const searchInput = {
 }
 
 
+
 //EVENTOS ------------------------------------------------------------------------->
 
 searchButton.addEventListener("click", (ev) => {
     filterByKeywords();
 })
+
 
 
 //Evento al cambiar la opción del selector (filtro por orientación)
@@ -52,6 +76,23 @@ async function manageOrientationChange() {
     //console.log(event.target.value) //target es el elemento del selector seleccionado.
 }
 
+//Evento para fetch categorias
+listCategory.addEventListener("click", async (ev) => {
+    if (ev.target.id === "ocean"){
+        const dataAPI = await getDataFromSearch(ev.target.id, orientationFilter.value, null); //Llama a la API pasándo por parámetro el query, la orientación y las keywords.
+        fillGallery(dataAPI)//Llena la galería
+    }
+    if (ev.target.id === "flower"){
+        const dataAPI = await getDataFromSearch(ev.target.id, orientationFilter.value, null); //Llama a la API pasándo por parámetro el query, la orientación y las keywords.
+        fillGallery(dataAPI)//Llena la galería
+    }
+    if (ev.target.id === "nature"){
+        const dataAPI = await getDataFromSearch(ev.target.id, orientationFilter.value, null); //Llama a la API pasándo por parámetro el query, la orientación y las keywords.
+        fillGallery(dataAPI)//Llena la galería
+    }
+
+
+})
 
 
 //FUNCIONES ----------------------------------------------------------------------->
@@ -130,7 +171,6 @@ const createCard = (photo) => {
     cardArticle.append(title);
     cardArticle.append(favDiv);
 
-    console.log(photo);
     return cardArticle;
 }
 
@@ -138,9 +178,11 @@ const createCard = (photo) => {
  * Pinta las cards en la galeria.
  * @param {Object} -> Array con todos los datos de los objetos photos
  */
-const fillGallery = ({ photos }) => { //Desestructurado de (json.photos)
+
+const fillGallery = (json) => { //Desestructurado de (json.photos)
     cardContainer.innerHTML = ""; //Vacía el contenedor previamente
-    photos.forEach(element => {
+    lastFetch = json;
+    json.photos.forEach(element => {
         const card = createCard(element)
         fragment.append(card);
     });
@@ -148,6 +190,45 @@ const fillGallery = ({ photos }) => { //Desestructurado de (json.photos)
 
 }
 
+// filterCategory --
+
+const createCategory = () => {
+    arrCategory.forEach(async (item, indez, array) => {
+        const objImg = await getImgCat(item.category);
+        const title = item.name;
+        fillCategory([objImg, title, item.category]);
+    })
+
+}
+
+const getImgCat = async (query, porPagina = 1) => {
+
+    const myImg = `https://api.pexels.com/v1/search?query=${query}&per_page=${porPagina}`;
+    let img = await getDataFromSearch(myImg);
+    return img;
+
+}
+
+
+const fillCategory = ([objImg, title, category]) => {
+    const article = document.createElement("ARTICLE");
+    const divImg = document.createElement("DIV");
+    const img = document.createElement("IMG");
+    const titulo = document.createElement("H1");
+
+    //console.log(ocean.photos[0].src.tiny);
+    //console.log("imagen: ", imgOcean);
+    img.setAttribute("id",category);
+    article.setAttribute("id", `category${category}`);
+    img.setAttribute("src", objImg.photos[0].src.tiny);
+    titulo.innerHTML = title;
+
+    divImg.append(img);
+    article.append(divImg, titulo)
+    fragment.append(article);
+    listCategory.append(fragment);
+
+}
 
 
 
@@ -162,6 +243,7 @@ const fillGallery = ({ photos }) => { //Desestructurado de (json.photos)
 const init = async () => { //init -> Inicializa
     const dataAPI = await getDataFromSearch(searchInput.value, orientationFilter.value, null); //Llama a la API pasándo por parámetro el query, la orientación y las keywords.
     fillGallery(dataAPI)//Llena la galería
+    createCategory(arrCategory); // filterCategory
 }
 
 init()
