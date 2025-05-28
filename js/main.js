@@ -7,30 +7,6 @@
 
 /*PSEUDOCODE:
 
-    Tarea:
-    Filtro por orientación: 
-    Añadir un filtro para seleccionar la orientación de las imágenes: Todas, Verticales, Horizontales.
-
-    VARIABLES: 
-    Elementos del DOM:
-        - Select
-    
-    EVENTOS: 
-        - Evento change en selector (cada vez que cambie de categoría se activará)
-
-    FUNCIONES: 
-        function buscar imagenes en servidor API 
-        function filtrar imágenes por disposición (con una condicional? x3)
-            - buscar imgs con disposición (todas/ vertical/ horizontal)
-            https://api.pexels.com/v1/search?query=ocean&orientation=square
-            https://api.pexels.com/v1/search?query=ocean&orientation=landscape
-            https://api.pexels.com/v1/search?query=ocean&orientation=portrait
-            
-        function pintar imágenes con esa categoría
-
-    INNVOCACIONES:
-    
-
 */
 
 
