@@ -95,6 +95,9 @@ listCategory.addEventListener("click", async (ev) => {
 })
 
 // Evento paginación
+/**
+ * Evento para detectar los botones de paginación y realice la acción pertinente (Siguiente Pagina, Pagina anterior, Primera pagina, Ultima pagina)
+ */
 paginacion.addEventListener("click", (ev) => {
     if (ev.target.id === "nextPage"){
         if (lastFetch.next_page){
@@ -216,7 +219,10 @@ const fillGallery = (json) => { //Desestructurado de (json.photos)
 }
 
 // filterCategory --
-
+/**
+ * Crear y pinta las categorias. 
+ * Dentro recorremos el array arrCategoria con las categorias que queremos añadir.
+ */
 const createCategory = () => {
     arrCategory.forEach(async (item, indez, array) => {
         const objImg = await getImgCat(item.category);
@@ -225,7 +231,12 @@ const createCategory = () => {
     })
 
 }
-
+/**
+ * Llamamos a getDataFromSearch para recorrer del API los datos necesarios para pintar la categoria.
+ * @param {String} query Categoria de la que será la imagen
+ * @param {Number} porPagina Número de objetos (imagenes) por pagina
+ * @returns Retorna el objeto (imagen) de la llamada de la API.
+ */
 const getImgCat = async (query, porPagina = 1) => {
 
     const myImg = `https://api.pexels.com/v1/search?query=${query}&per_page=${porPagina}`;
@@ -235,7 +246,10 @@ const getImgCat = async (query, porPagina = 1) => {
 
 }
 
-
+/**
+ * Crea y pinta todos los elementos.
+ * @param {Array} param0 [objImg] => Recive el objeto (imagen). [title] => Titulo de la categoria. [category] => query que interpreta la API
+ */
 const fillCategory = ([objImg, title, category]) => {
     const article = document.createElement("ARTICLE");
     const divImg = document.createElement("DIV");
@@ -257,21 +271,30 @@ const fillCategory = ([objImg, title, category]) => {
 }
 
 // Paginación
-
+/**
+ * Pasa a la siguiente pagina de imagenes y pinta en el DOM
+ * @param {Object} json Objeto actual por la cual sacaremos la siguiente pagina
+ */
 const nextPage = async (json) => {
     console.log("next page: ", json);
     const fetch = await obtainDataFromAPI(json.next_page);
     actualPagina.innerHTML = json.page+1;
     fillGallery(fetch);
 }
-
+/**
+ * Pasa a la anterior pagina de imagenes y pinta en el DOM
+ * @param {Object} json Objeto actual por la cual sacaremos la pagina anterior
+ */
 const prevPage = async (json) => {
     //console.log("prev page: ", json);
     const fetch = await obtainDataFromAPI(json.prev_page);
     actualPagina.innerHTML = json.page-1;
     fillGallery(fetch);
 }
-
+/**
+ * Pasa a la primera pagina de imagenes y pinta en el DOM
+ * @param {Object} json Objeto actual por la cual sacaremos la primera pagina
+ */
 const firstPage = async (json) => {
     //console.log("first page: ", json);
     const url = `https://api.pexels.com/v1/search?query=${category}`
@@ -280,7 +303,10 @@ const firstPage = async (json) => {
     //console.log("first: ", fetch);
     fillGallery(fetch);
 }
-
+/**
+ * Pasa a la ultima pagina de imagenes y pinta en el DOM
+ * @param {Object} json Objeto actual por la cual sacaremos la ultima pagina
+ */
 const lastPage = async (json) => {
     //console.log("first page: ", json);
     const total = json.total_results;
