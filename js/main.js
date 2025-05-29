@@ -28,8 +28,9 @@ const searchButton = document.querySelector("#searchButton")
 
 const listCategory = document.querySelector("#categoryList");
 
+//Paginación
 const paginacion = document.querySelector("#pagination");
-
+const actualPagina = document.querySelector("#actualPage");
 const fragment = document.createDocumentFragment();
 
 const orientationFilter = document.querySelector("#orientationFilter")
@@ -41,12 +42,13 @@ const URL_BASE = "https://api.pexels.com/v1/"
 
 // Ultima fetch realizada
 let lastFetch = "";
-
+let category = "";
+let pagina;
 
 // array de Categorias
 const arrCategory = [
     { category: "ocean", name: "Oceano" },
-    { category: "flower", name: "Flores" },
+    { category: "people", name: "Personas" },
     { category: "nature", name: "Naturaleza" }
 ];
 
@@ -84,7 +86,8 @@ cardContainer.addEventListener("click", (ev) => {
 
 
 favoritesButton.addEventListener("click", (eve) => {
-    // get Datos from 
+    lastFetch = null;
+
     // obtengo los datos del localStorage. Luego pinto los datos
     const favoritesArray = JSON.parse(localStorage.getItem("favoritesArray")) || [];
     console.log("favorites: " + favoritesArray)
@@ -121,7 +124,37 @@ async function manageOrientationChange() {
     //console.log(event.target.value) //target es el elemento del selector seleccionado.
 }
 
-
+// Evento paginación
+/**
+ * Evento para detectar los botones de paginación y realice la acción pertinente (Siguiente Pagina, Pagina anterior, Primera pagina, Ultima pagina)
+ */
+paginacion.addEventListener("click", (ev) => {
+    console.log("fav: ", lastFetch);
+    if (!lastFetch) return;
+    
+    if (ev.target.id === "nextPage"){
+        console.log("paginacion: ", ev.target)
+        console.log("last fetch: ", lastFetch);
+        if (lastFetch.next_page){
+            nextPage(lastFetch);
+        } else {
+            ev.target.disabled;
+        }
+    }
+    if (ev.target.id === "beforePage"){
+        if (lastFetch.prev_page){
+            prevPage(lastFetch);
+        }else {
+            ev.target.disabled;
+        }
+    }
+    if (ev.target.id === "firstPage"){
+        firstPage(lastFetch);
+    }
+    if (ev.target.id === "lastPage"){
+        lastPage(lastFetch);
+    }
+})
 /**
  * Guarda una imagen en la seccion de favoritos dentro de  local storage.
  * @param {number} id - Identificador único de la imagen.
@@ -180,9 +213,10 @@ const filterByKeywords = async () => {
  * @param {Array} words 
  * @returns {Object}g
  */
-const getDataFromSearch = async (query, orientation, perPage = 16) => {
+
+const getDataFromSearch = async (query, orientation = "landscape", perPage = 16, page = 1) => {
     lastQuery = query;
-    const myString = `${URL_BASE}search?query=${query}&orientation=${orientation}&per_page=${perPage}`;
+    const myString = `${URL_BASE}search?query=${query}&orientation=${orientation}&per_page=${perPage}&page=${page}`;
     return await obtainDataFromAPI(myString); //Cuando invocamos esta función invoca también obtainDataFromAPI con nuestra nueva URL. 
 }
 
@@ -212,6 +246,9 @@ const obtainDataFromAPI = async (url) => {//Esta función se repite y queda auto
         })
         if (dataAPI.ok) {
             const json = await dataAPI.json(); // El método .json() devuelve una promesa, por eso hay que poner el await.
+            actualPagina.innerHTML = json.page;
+            pagina = json.page;
+            lastFetch = json;
             return json;
         } else {
             throw "No se consiguieron las imágenes solicitadas" //Error (mandar a catch)
@@ -275,7 +312,7 @@ const createCard = (photo) => {
  */
 
 const fillGallery = (photos) => { //Desestructurado de (json.photos)
-
+    console.log(photos);
     cardContainer.innerHTML = ""; //Vacía el contenedor previamente
     photos.forEach(element => {
         const card = createCard(element)
@@ -286,7 +323,10 @@ const fillGallery = (photos) => { //Desestructurado de (json.photos)
 }
 
 // filterCategory --
-
+/**
+ * Crear y pinta las categorias. 
+ * Dentro recorremos el array arrCategoria con las categorias que queremos añadir.
+ */
 const createCategory = () => {
     arrCategory.forEach(async (item, indez, array) => {
         const objImg = await getDataFromSearch(item.category, orientationFilter, 1)
@@ -295,7 +335,25 @@ const createCategory = () => {
     })
 
 }
+/**
+ * Llamamos a getDataFromSearch para recorrer del API los datos necesarios para pintar la categoria.
+ * @param {String} query Categoria de la que será la imagen
+ * @param {Number} porPagina Número de objetos (imagenes) por pagina
+ * @returns Retorna el objeto (imagen) de la llamada de la API.
+ */
+const getImgCat = async (query, porPagina = 1) => {
 
+    const myImg = `https://api.pexels.com/v1/search?query=${query}&per_page=${porPagina}`;
+    let img = await getDataFromSearch(myImg);
+    category = query;
+    return img;
+
+}
+
+/**
+ * Crea y pinta todos los elementos.
+ * @param {Array} param0 [objImg] => Recive el objeto (imagen). [title] => Titulo de la categoria. [category] => query que interpreta la API
+ */
 
 const fillCategory = ([objImg, title, category]) => {
     const article = document.createElement("ARTICLE");
@@ -318,6 +376,53 @@ const fillCategory = ([objImg, title, category]) => {
 
 }
 
+// Paginación
+/**
+ * Pasa a la siguiente pagina de imagenes y pinta en el DOM
+ * @param {Object} json Objeto actual por la cual sacaremos la siguiente pagina
+ */
+const nextPage = async (json) => {
+    console.log("next page: ", json);
+    const fetch = await obtainDataFromAPI(json.next_page);
+    actualPagina.innerHTML = pagina;
+    fillGallery(fetch.photos);
+}
+/**
+ * Pasa a la anterior pagina de imagenes y pinta en el DOM
+ * @param {Object} json Objeto actual por la cual sacaremos la pagina anterior
+ */
+const prevPage = async (json) => {
+    //console.log("prev page: ", json);
+    const fetch = await obtainDataFromAPI(json.prev_page);
+    actualPagina.innerHTML = pagina;
+    fillGallery(fetch.photos);
+}
+/**
+ * Pasa a la primera pagina de imagenes y pinta en el DOM
+ * @param {Object} json Objeto actual por la cual sacaremos la primera pagina
+ */
+const firstPage = async (json) => {
+    //console.log("first page: ", json);
+    const url = `https://api.pexels.com/v1/search?query=${category}`
+    const fetch = await getDataFromSearch(url);
+    actualPagina.innerHTML = 1;
+    //console.log("first: ", fetch);
+    fillGallery(fetch.photos);
+}
+/**
+ * Pasa a la ultima pagina de imagenes y pinta en el DOM
+ * @param {Object} json Objeto actual por la cual sacaremos la ultima pagina
+ */
+const lastPage = async (json) => {
+    //console.log("first page: ", json);
+    const total = json.total_results;
+    const pagina = total / json.per_page;
+    const url = `https://api.pexels.com/v1/search?query=${category}&page=${pagina}`;
+    const fetch = await getDataFromSearch(url);
+    actualPagina.innerHTML = pagina;
+    //console.log("first: ", fetch);
+    fillGallery(fetch.photos);
+}
 
 //INVOCACIONES -------------------------------------------------------------------->
 
