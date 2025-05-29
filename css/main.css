@@ -1,0 +1,407 @@
+/* CSS RESET ------------------------------------------------------------ */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: var(--fuente-base);
+    /*font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;*/
+}
+
+/* Reseteo de inputs de formulario */
+input, select, textarea {
+  border: none;
+  outline: none;
+  cursor: pointer;
+}
+
+/* Reseteo de botones */
+button {
+  border: none;
+  outline: none;
+  appearance: none;
+  cursor: pointer;
+}
+
+
+
+
+/* CSS GENERAL ------------------------------------------------------------ */
+
+/* Variables ----------------------------- */
+:root {
+/* Paleta de color */
+    --color-primario: #0D0D0D;
+    --color-secundario: #888C8C; 
+    --color-mediooscuro: #404040;
+    --color-medioclaro: #e8e8e8; 
+
+    --color-tipo-clara: #ffffff;  
+    --color-tipo-oscura: #000000;
+
+    --color-fondo-claro: #ffffff;  
+    --color-fondo-oscuro: #000000;
+
+    --color-acento: #32cd32;  
+    
+/* Tipografías */
+  --fuente-base: 'Inter', sans-serif;
+  --fuente-titulos: 'Playfair Display', serif;
+  --fuente-monospace: 'Fira Code', monospace;
+
+  --fuente-peso-bold: 700;
+  --fuente-peso-regular: 600;
+  --fuente-peso-light: 400;
+}
+
+/* Headings ---- */
+h1{
+    font-weight: var(--fuente-peso-regular);
+}
+h2{
+    font-weight: var(--fuente-peso-regular);
+    font-size: 1.5em;
+}
+h3{
+    font-weight: var(--fuente-peso-light);
+    font-size: 1em;
+}
+h4{
+    font-weight: var(--fuente-peso-light);
+    font-size: 1em;
+}
+
+
+
+/* Contenedores --------------------------- */
+body {
+    background-color: var(--color-medioclaro);
+    color: var(--color-tipo-oscura);
+    font-size: 1em;
+    font-family: var(--fuente-base);
+    width: 100%;
+    padding-bottom: 5em;
+}
+
+
+/* Botones ------------------------------- */
+
+
+
+/* CSS ESPECÍFICO ------------------------------------------------------------ */
+
+/* Header con filtros -------------------- */
+.headerContainer{
+    background-color: var(--color-fondo-oscuro);
+    color: var(--color-tipo-clara);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 2em;
+    padding: 2em;
+}
+
+.headerLogo{
+    font-weight: var(--fuente-peso-bold);
+    font-size: 2em;
+}
+
+.filtersContainer{
+    background-color: var(--color-fondo-oscuro);
+    color: var(--color-tipo-clara);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.75em;
+}
+
+.searchBar{
+    width: 100%;
+    display: flex;
+}
+
+.searchBar input{
+    padding: 1em 2em;
+    border-radius: 10em;
+    width: 90%;
+}
+
+.searchBar button{
+    padding: 1em ;
+    border-radius: 20em; 
+    display: flex;
+}
+
+.otherFiltersContainer{
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.5rem; /* opcional: espaciado entre columnas */
+}
+
+.otherFiltersContainer select{
+    padding: 0.75em 2em;
+    background-color: var(--color-fondo-claro);
+    border-radius: 0.25em;
+    width: 100%;
+    text-align: left;
+}
+
+.otherFiltersContainer select:hover{
+    background-color: var(--color-medioclaro);
+}
+
+.otherFiltersContainer select option{
+    padding: 1em 2em;
+}
+
+.otherFiltersContainer button{
+    min-width: 100%;
+    text-align: center ;
+    border-radius: 0.25em;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    gap: 0.25em;
+}
+
+
+
+/* Bloque Categorías --------------------- */
+.categoryListContainer{
+    background-color: var(--color-fondo-oscuro);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 1em 2em 3em 2em;
+    gap: 1.5em;
+
+}
+
+.categoryListContainer h2{
+    color: var(--color-tipo-clara);
+}
+
+#categoryList{
+    background-color: var(--color-fondo-oscuro);
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    gap: 0.5em;
+
+}
+
+.categoryCard{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    gap: 0.5em;
+    padding-bottom: 0.5em;
+    border-radius: 0.4em;
+    overflow: hidden;
+    background-color: var(--color-fondo-claro);
+
+}
+
+.imgDiv{
+    width: 100%;
+    aspect-ratio: 1 / 0.9;
+    background-color:var(--color-mediooscuro);
+}
+
+.imgDiv img{
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+}
+
+
+
+/* Bloque Cards (galería)----------------- */
+.galleryContainer{
+    color: var(--color-tipo-oscura);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 1.5em;
+    padding-top: 2em;
+}
+
+.galleryContainer h2{
+    padding: 0em 2rem;
+}
+
+#cardsContainer{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+    /*  https://developer.mozilla.org/en-US/docs/Web/CSS/grid-template-columns
+        repeat: función que repite lo que hay en su interior
+        auto-fit: crea tantas columnas como quepan en el contenedor;
+        minmax(250px, 1fr): minmax(tamañomínimo, tamañomáximo) de cada columna*/
+    gap: 1em;
+}
+
+/* Card ---------------- */
+.cardArticle{
+    background-color: var(--color-fondo-claro);
+    border-radius: 1em;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.cardArticle div{
+    width: 100%;
+}
+.cardArticle div img{
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+}
+.cardArticle h4{
+    padding: 1em 2rem;
+}
+
+.favDiv{
+    display: flex;
+    flex-direction: row;
+    justify-content: right;
+    gap: 0.5em;
+    padding: 2em 2rem;
+}
+.favDiv p{
+    font-size: 1rem;
+}
+
+
+/* Paginación ---------- */
+#pagination{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 2em;
+    gap: 0.25em;
+}
+
+#pagination button{
+    background-color: var(--color-secundario);
+    color: var(--color-tipo-oscura);
+    padding: 1em 1.5em;
+    border-radius: 20em;
+    font-weight: var(--fuente-peso-regular);
+}
+
+#pagination p{
+    margin: 0 1em;
+    text-decoration: underline;
+}
+
+
+
+
+/* Footer ---------- */
+
+.basicFooter{
+    position: fixed;                     
+    left: 0;               
+    bottom: 0;  
+    width: 100%;           
+    z-index: 100;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 1em 2em;
+    background-color: var(--color-fondo-oscuro);
+
+}
+
+.basicFooter p {
+    color: var(--color-tipo-clara);
+    font-weight: var(--fuente-peso-bold);
+}
+
+.basicFooter a {
+    color: var(--color-tipo-clara);
+    text-decoration: underline;
+    font-weight: var(--fuente-peso-light);
+}
+
+
+
+
+
+/* RESPONSIVE ------------------------------------------------------------ */
+/*MEDIAQUERIES ↓↓↓ --------------------------*/
+/*
+-------------------------------------------------------
+                a partir de 600px
+-------------------------------------------------------
+*/
+@media screen and (min-width: 600px) {
+    #cardsContainer{
+    padding: 0 2rem;
+    }
+}
+
+/*
+-------------------------------------------------------
+                a partir de 900px
+-------------------------------------------------------
+*/
+@media screen and (min-width: 900px) {
+    
+    .headerContainer {
+        flex-direction: row;
+        justify-content: space-between;
+    }
+
+    .headerLogo {
+        font-size: 3em;
+    }
+
+    .filtersContainer {
+        flex-direction: row;
+        gap: 2em;
+        width: 80%;
+    }
+
+    .searchBar input {
+        width: 100%;
+    }
+
+    .searchBar button {
+        padding: 1em 1.5em;
+        align-items: center;
+    }
+
+    .otherFiltersContainer select {
+        padding: 1em 4em 1em 2em;
+    }
+
+    .otherFiltersContainer button {
+        padding: 1em 0.5em;
+        justify-content: space-evenly;
+    }
+}
+
+
+
+
+/*EFECTOS ESPECIALES ----------------------------------------------------- */
+
+/*Iconos ----------*/
+.material-symbols-rounded {
+  font-variation-settings:
+  'FILL' 1,
+  'wght' 400,
+  'GRAD' 0,
+  'opsz' 20;
+}
+
+/*Degradados ------*/
+/*Animaciones -----*/
+
+
+
