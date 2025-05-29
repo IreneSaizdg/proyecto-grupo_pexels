@@ -7,77 +7,108 @@
     <title>Practica grupal API Pexels</title>
 
     <link rel="stylesheet" href="/css/main.css">
+    <!--Iconos-->
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 </head>
 
 <body>
-    <header>
-        <!--Flitros ---------->
-        <!--Flitros palabras -->
-        <input type="text" id="wordFilter" name="wordFilter" />
-        <!-- TODO: Añadir Submit -->
 
-        <!--Flitros por orientación (vertical/horizontal) -->
-        <select id="orientationFilter" name="orientationFilter">
-            <option value="square" selected="selected">Todas</option>
-            <option value="portrait">Vertical</option>
-            <option value="landscape">Horizontal</option>
-        </select>
+    <header class="headerContainer">
+        <p class="headerLogo">gu.pic</p>
+
+        <div class="filtersContainer">
+            <!--Flitros ----------->
+            <!--Flitros palabras -->
+            <div class="searchBar">
+                <input type="text" id="wordFilter" name="wordFilter" placeholder="Haz una búsqueda..." />
+                <!--Botón lupa--------->
+                <button id="searchButton">
+                    <span class="material-symbols-rounded">search</span>
+                </button>
+            </div>
+            <!--Flitros por orientación (vertical/horizontal) -->
+            <div class="otherFiltersContainer">
+                <select id="orientationFilter" name="orientationFilter">
+                    <option value="horizontal" selected>horizontal</option>
+                    <option value="vertical">vertical</option>
+                    <option value="Square">cuadrada</option>
+                </select>
+                <button id="favoritesButton">
+                    favoritos
+                    <span class="material-symbols-rounded">favorite</span>
+                </button>
+            </div>
+        </div>
+
     </header>
-
-
 
     <!--Container todo  ------------------------------------------------->
     <main>
-        <section id="categoryList">
-            <!-- <article id="categoryOcean">
-                <div id="divImgOcean">
-                    <img id="imgOcean">
+
+        <section class="categoryListContainer">
+            <h2>Categorías más buscadas:</h2>
+            <div id="categoryList">
+                <!-- <article id="category1" class="categoryCard" >
+                <div class="imgDiv">
+                    <img>
                 </div>
-                <h1>Oceano</h1>
+                <h3>Category 1</h3>
             </article>
 
-            <article id="categoryFlowers">
-                <div id="divImgFlowers">
-                    <img id="imgFlowers">
+            <article id="category2" class="categoryCard" >
+                <div class="imgDiv">
+                    <img>
                 </div>
-                <h1>Flores</h1>
+                <h3>Category 2</h3>
             </article>
 
-            <article id="categoryNature">
-                <div id="divImgNature">
-                    <img id="imgNature">
+            <article id="category3" class="categoryCard" >
+                <div class="imgDiv">
+                    <img>
                 </div>
-                <h1>Naturaleza</h1>
+                <h3>Category 3</h3>
             </article> -->
+            </div>
         </section>
-            <!--Container imgs ------------>
-            <section id="cardsContainer">
 
+
+        <section class="galleryContainer">
+            <h2>Galería</h2>
+
+            <!--Container imgs ------------>
+            <div id="cardsContainer">
                 <!--Card (DINAMICO) -->
                 <!-- <article class="card">
-                <div>
-                    <img src="#" alt="imgAlt"></img>
-                </div>
-                <h1>Titulo img</h1>
-                <div>
-                    <input type="checkbox" id="favoriteImgs" name="favoriteImgs" />
-                </div>
+                    <div>
+                        <img src="#" alt="imgAlt"></img>
+                    </div>
+                    <h1>Titulo img</h1>
+                    <div>
+                        <input type="checkbox" id="favoriteImgs" name="favoriteImgs" />
+                    </div>
 
-            </article> -->
-
-            </section>
-
-            <!--Paginación (DINÁMICO) --->
-            <div id="pagination">
-                <button id="firstPage">←←</button>
-                <button id="beforePage">←</button>
-                <p id="actualPage">Número actual</p> <!--Dinámico (más números)--->
-                <button id="nextPage">→</button>
-                <button id="lastPage">→→</button>
+                </article> -->
             </div>
 
+        </section>
+
+
+            <!--Paginación (DINÁMICO) --->
+        <div id="pagination">
+            <button id="firstPage">←←</button>
+            <button id="beforePage">←</button>
+            <p id="actualPage">Número actual</p> <!--Dinámico (más números)--->
+            <button id="nextPage">→</button>
+            <button id="lastPage">→→</button>
+        </div>
     </main>
 
+    <!--FOOTER----------------------->
+    <footer class="basicFooter">
+        <p>©2025 gu.pic</p>
+        <p><a href="#">Privacidad y cookies</a></p>
+    </footer>
     <script src="/js/main.js"></script>
 </body>
 
