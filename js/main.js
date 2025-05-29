@@ -31,7 +31,6 @@ const listCategory = document.querySelector("#categoryList");
 //Paginación
 const paginacion = document.querySelector("#pagination");
 const actualPagina = document.querySelector("#actualPage");
-
 const fragment = document.createDocumentFragment();
 
 const orientationFilter = document.querySelector("#orientationFilter")
@@ -44,7 +43,7 @@ const URL_BASE = "https://api.pexels.com/v1/"
 // Ultima fetch realizada
 let lastFetch = "";
 let category = "";
-
+let pagina;
 
 // array de Categorias
 const arrCategory = [
@@ -58,9 +57,9 @@ let lastQuery = "";
 
 //EVENTOS ------------------------------------------------------------------------->
 
-/* searchButton.addEventListener("click", (ev) => {
+searchButton.addEventListener("click", (ev) => {
     filterByKeywords();
-}) */
+})
 
 
 
@@ -87,7 +86,8 @@ cardContainer.addEventListener("click", (ev) => {
 
 
 favoritesButton.addEventListener("click", (eve) => {
-    // get Datos from 
+    lastFetch = null;
+
     // obtengo los datos del localStorage. Luego pinto los datos
     const favoritesArray = JSON.parse(localStorage.getItem("favoritesArray")) || [];
     console.log("favorites: " + favoritesArray)
@@ -129,7 +129,12 @@ async function manageOrientationChange() {
  * Evento para detectar los botones de paginación y realice la acción pertinente (Siguiente Pagina, Pagina anterior, Primera pagina, Ultima pagina)
  */
 paginacion.addEventListener("click", (ev) => {
+    console.log("fav: ", lastFetch);
+    if (!lastFetch) return;
+    
     if (ev.target.id === "nextPage"){
+        console.log("paginacion: ", ev.target)
+        console.log("last fetch: ", lastFetch);
         if (lastFetch.next_page){
             nextPage(lastFetch);
         } else {
@@ -148,7 +153,8 @@ paginacion.addEventListener("click", (ev) => {
     }
     if (ev.target.id === "lastPage"){
         lastPage(lastFetch);
-
+    }
+})
 /**
  * Guarda una imagen en la seccion de favoritos dentro de  local storage.
  * @param {number} id - Identificador único de la imagen.
@@ -240,6 +246,9 @@ const obtainDataFromAPI = async (url) => {//Esta función se repite y queda auto
         })
         if (dataAPI.ok) {
             const json = await dataAPI.json(); // El método .json() devuelve una promesa, por eso hay que poner el await.
+            actualPagina.innerHTML = json.page;
+            pagina = json.page;
+            lastFetch = json;
             return json;
         } else {
             throw "No se consiguieron las imágenes solicitadas" //Error (mandar a catch)
@@ -303,11 +312,10 @@ const createCard = (photo) => {
  */
 
 const fillGallery = (photos) => { //Desestructurado de (json.photos)
-
+    console.log(photos);
     cardContainer.innerHTML = ""; //Vacía el contenedor previamente
     photos.forEach(element => {
         const card = createCard(element)
-        actualPagina.innerHTML = json.page;
         fragment.append(card);
     });
     cardContainer.append(fragment)
@@ -376,8 +384,8 @@ const fillCategory = ([objImg, title, category]) => {
 const nextPage = async (json) => {
     console.log("next page: ", json);
     const fetch = await obtainDataFromAPI(json.next_page);
-    actualPagina.innerHTML = json.page+1;
-    fillGallery(fetch);
+    actualPagina.innerHTML = pagina;
+    fillGallery(fetch.photos);
 }
 /**
  * Pasa a la anterior pagina de imagenes y pinta en el DOM
@@ -386,8 +394,8 @@ const nextPage = async (json) => {
 const prevPage = async (json) => {
     //console.log("prev page: ", json);
     const fetch = await obtainDataFromAPI(json.prev_page);
-    actualPagina.innerHTML = json.page-1;
-    fillGallery(fetch);
+    actualPagina.innerHTML = pagina;
+    fillGallery(fetch.photos);
 }
 /**
  * Pasa a la primera pagina de imagenes y pinta en el DOM
@@ -399,7 +407,7 @@ const firstPage = async (json) => {
     const fetch = await getDataFromSearch(url);
     actualPagina.innerHTML = 1;
     //console.log("first: ", fetch);
-    fillGallery(fetch);
+    fillGallery(fetch.photos);
 }
 /**
  * Pasa a la ultima pagina de imagenes y pinta en el DOM
@@ -413,7 +421,7 @@ const lastPage = async (json) => {
     const fetch = await getDataFromSearch(url);
     actualPagina.innerHTML = pagina;
     //console.log("first: ", fetch);
-    fillGallery(fetch);
+    fillGallery(fetch.photos);
 }
 
 //INVOCACIONES -------------------------------------------------------------------->
