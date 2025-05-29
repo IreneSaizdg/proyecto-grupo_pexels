@@ -50,12 +50,7 @@ const arrCategory = [
     { category: "nature", name: "Naturaleza" }
 ];
 
-
-//SearchInput ficticio
-const searchInput = {
-    value: "sea",
-}
-
+let lastQuery = "";
 
 
 //EVENTOS ------------------------------------------------------------------------->
@@ -119,10 +114,8 @@ const setFavoritesArray = (...elements) => {
 
 //Función para gestionar el cambio de orientación en el selector
 async function manageOrientationChange() {
-    const query = searchInput.value || "no hay query"; //Variable a asignar externamente para el query
-
     const selectedOrientation = orientationFilter.value; //La orientación seleccionada será igual que la del selector seleccionado 
-    const orientationData = await getDataFromSearch(query, selectedOrientation); //Llama a la función 
+    const orientationData = await getDataFromSearch(lastQuery, selectedOrientation); //Llama a la función 
     fillGallery(orientationData.photos); //Llena la galería en base a la data de orientación. 
 
     //console.log(event.target.value) //target es el elemento del selector seleccionado.
@@ -188,6 +181,8 @@ const filterByKeywords = async () => {
  * @returns {Object}g
  */
 const getDataFromSearch = async (query, orientation, perPage = 16) => {
+    lastQuery = query;
+    console.log(orientation)
     const myString = `${URL_BASE}search?query=${query}&orientation=${orientation}&per_page=${perPage}`;
     return await obtainDataFromAPI(myString); //Cuando invocamos esta función invoca también obtainDataFromAPI con nuestra nueva URL. 
 }
@@ -311,7 +306,7 @@ const fillCategory = ([objImg, title, category]) => {
 
     article.setAttribute("id", `category${category}`);
     article.classList.add("categoryCard");
-    divImg.classList.add("imgDiv")
+    divImg.classList.add("imgDiv");
     img.setAttribute("id", category);
     img.classList.add("categoryFilter");
     img.setAttribute("src", objImg.photos[0].src.tiny);
@@ -332,10 +327,10 @@ const fillCategory = ([objImg, title, category]) => {
  */
 //PROVISIONAL
 const init = async () => { //init -> Inicializa
-
-    const dataAPI = await getDataFromSearch(searchInput.value, orientationFilter.value); //Llama a la API pasándo por parámetro el query, la orientación y las keywords.
+    createCategory(arrCategory);
+    const dataAPI = await getDataFromSearch(arrCategory[0].category, orientationFilter.value); //Llama a la API pasándo por parámetro el query, la orientación y las keywords.
     fillGallery(dataAPI.photos)//Llena la galería
-    createCategory(arrCategory); // filterCategory
+    // filterCategory
 
 }
 
