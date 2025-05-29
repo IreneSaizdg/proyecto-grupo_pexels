@@ -210,6 +210,13 @@ body {
     background-color:var(--color-mediooscuro);
 }
 
+.imgDiv img{
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+}
+
+
 
 /* Bloque Cards (galería)----------------- */
 .galleryContainer{
@@ -249,7 +256,9 @@ body {
     width: 100%;
 }
 .cardArticle div img{
+    object-fit: cover;
     width: 100%;
+    height: 100%;
 }
 .cardArticle h4{
     padding: 1em 2rem;
