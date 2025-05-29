@@ -182,7 +182,6 @@ const filterByKeywords = async () => {
  */
 const getDataFromSearch = async (query, orientation, perPage = 16) => {
     lastQuery = query;
-    console.log(orientation)
     const myString = `${URL_BASE}search?query=${query}&orientation=${orientation}&per_page=${perPage}`;
     return await obtainDataFromAPI(myString); //Cuando invocamos esta función invoca también obtainDataFromAPI con nuestra nueva URL. 
 }
